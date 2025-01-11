@@ -122,6 +122,8 @@ public class RobotContainer {
 
       driver.start().onTrue(drivetrain.resetPidgeon());
 
+      driver.back().onTrue(drivetrain.localizeRobotRed());
+
 
       elevatorSubsystem.setDefaultCommand(elevatorSubsystem.stop());
 
