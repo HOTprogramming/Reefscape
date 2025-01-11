@@ -7,9 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Elevator.ElevatorIOReal;
-import frc.robot.subsystems.Elevator.ElevatorIOSim;
-import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.GameSpec.Elevator.Elevator;
+import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOReal;
+import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 
 public class RobotContainer {
