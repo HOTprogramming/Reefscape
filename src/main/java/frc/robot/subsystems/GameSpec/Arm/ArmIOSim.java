@@ -21,7 +21,7 @@ public class ArmIOSim extends ArmIO {
 
 
   ElevatorIOSim elevatorSim = new ElevatorIOSim();
-  
+
   public TalonFXSimState armSimState;
 
     public final SingleJointedArmSim armSim;
@@ -36,15 +36,15 @@ public class ArmIOSim extends ArmIO {
     armSimState = arm.getSimState();
 
     armSim = new SingleJointedArmSim(
-        DCMotor.getKrakenX60Foc(1),
-          200.0,
-          SingleJointedArmSim.estimateMOI(Units.inchesToMeters(30), 8.0),
-          Units.inchesToMeters(30),
-          Units.degreesToRadians(-75),
-          Units.degreesToRadians(255),
-          true,
-          0,
-          2.0 * Math.PI / 4096.0,
+        ArmConstants.simGearBox,
+        ArmConstants.simGearing,
+        ArmConstants.simInertia,
+        ArmConstants.simArmLength,
+        ArmConstants.simMinAngle,
+        ArmConstants.simMaxAngle,
+        ArmConstants.gravity,
+        ArmConstants.startingAngle,
+        ArmConstants.measurementSTDDEVS,
           0.0 // Add noise with a std-dev of 1 tick
           );
         
