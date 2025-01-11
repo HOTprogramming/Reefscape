@@ -24,12 +24,8 @@ public class ArmIOSim extends ArmIO {
 
   public TalonFXSimState armSimState;
 
-    public final SingleJointedArmSim armSim;
+  public final SingleJointedArmSim armSim;
 
-      // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
-  private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
-  private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
-  //private final MechanismLigament2d m_armTower;
   public MechanismLigament2d m_arm;
 
   public ArmIOSim(){
@@ -52,9 +48,9 @@ public class ArmIOSim extends ArmIO {
        m_arm = elevatorSim.getElevatorLigament().append(
         new MechanismLigament2d(
             "Arm",
-            30, // Length of the arm
+            ArmConstants.simArmLength, // Length of the arm
             Units.radiansToDegrees(armSim.getAngleRads()), // Initial angle
-            6, // Line width
+            50, // Line width
             new Color8Bit(Color.kYellow)));
   }
 

@@ -14,9 +14,9 @@ public class ArmConstants {
     public static final DCMotor simGearBox = DCMotor.getKrakenX60Foc(1);
     public static final double simGearing = 200;
     public static final double simInertia = SingleJointedArmSim.estimateMOI(Units.inchesToMeters(30), 8.0);
-    public static final double simArmLength = Units.inchesToMeters(30);
-    public static final double simMinAngle = Units.degreesToRadians(-75);
-    public static final double simMaxAngle = Units.degreesToRadians(255);
+    public static final double simArmLength = Units.inchesToMeters(60);
+    public static final double simMinAngle = Units.degreesToRadians(-90);
+    public static final double simMaxAngle = Units.degreesToRadians(90);
     public static final boolean gravity = true;
     public static final double startingAngle = Units.degreesToRadians(0);
     public static final double measurementSTDDEVS = 2.0 * Math.PI / 4096.0;
