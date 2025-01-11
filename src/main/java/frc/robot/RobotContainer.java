@@ -49,6 +49,9 @@ public class RobotContainer {
 
     armSubsystem.setDefaultCommand(armSubsystem.stop());
 
+    driver.a().whileTrue(armSubsystem.runToPosition(.5));
+
+
 
   }
 
