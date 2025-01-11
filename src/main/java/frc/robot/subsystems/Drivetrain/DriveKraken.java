@@ -100,6 +100,6 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
 
     @Override
     public void seedFieldRelative(Pose2d seedling) {
-        resetPose(seedling);
+        // resetPose(seedling);
     }
 }

@@ -190,7 +190,7 @@ public class Drive extends SubsystemBase {
     }
 
     public Command localizeRobotRed() {
-        return runOnce(() -> setPose(new Pose2d(4, 4.5, Rotation2d.fromDegrees(0))));
+        return runOnce(() -> setPose(new Pose2d(redHex, Rotation2d.fromDegrees(180))));
     }
 
     private void setPose(Pose2d pose) {
