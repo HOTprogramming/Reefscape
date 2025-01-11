@@ -1,6 +1,6 @@
 package frc.robot.subsystems.GameSpec.Arm;
 
-public class ElevatorIOReal extends ArmIO {
+public class ArmIOReal extends ArmIO {
   @Override
   public void periodic() {
     
