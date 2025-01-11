@@ -10,10 +10,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.GameSpec.Master;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIO.ElevatorIOStats;
 
 public class Elevator extends SubsystemBase {
   public FunctionalCommand testCommand;
+
+  Master mo = new Master();
 
   private final ElevatorIO io;
   public final ElevatorIOStats stats;
@@ -48,6 +51,10 @@ public class Elevator extends SubsystemBase {
     io.updateStats();
       
     UpdateTelemetry();
+
+    double cp = mo.masterCommand.elevatorPos;
+    io.setElevatorMotorControl(cp);
+
   }
 
   private void UpdateTelemetry() {

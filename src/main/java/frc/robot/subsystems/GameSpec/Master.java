@@ -1,6 +1,8 @@
 package frc.robot.subsystems.GameSpec;
 
 public class Master {
+
+        public GameSpecCommand masterCommand;
     
         public enum GameSpecCommand{
         PACKAGE(0,1,2,3),
@@ -14,10 +16,10 @@ public class Master {
         BARGE(0,1,2,3);
 
 
-        private final double elevatorPos;
-        private final double armPos;
-        private final double coralPos;
-        private final double algaePos;
+        public final double elevatorPos;
+        public final double armPos;
+        public final double coralPos;
+        public final double algaePos;
   
         private GameSpecCommand (double elevatorPos, double armPos, double coralPos, double algaePos) {
             this.elevatorPos = elevatorPos; 
