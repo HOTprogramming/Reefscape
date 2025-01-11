@@ -16,7 +16,7 @@ import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class RobotContainer {
   private Elevator elevatorSubsystem = null;
-  private Arm armSubsystem = null;
+  //private Arm armSubsystem = null;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
