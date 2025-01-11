@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.GameSpec.Arm.Arm;
+import frc.robot.subsystems.GameSpec.Arm.ArmIOSim;
 import frc.robot.subsystems.GameSpec.Elevator.Elevator;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOReal;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
@@ -14,6 +16,7 @@ import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class RobotContainer {
   private Elevator elevatorSubsystem = null;
+  private Arm armSubsystem = null;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -24,7 +27,11 @@ public class RobotContainer {
     switch (Constants.getRobot()) {
       case COMPBOT -> {elevatorSubsystem = new Elevator(new ElevatorIOReal());}
       case DEVBOT -> {}
-      case SIMBOT -> {elevatorSubsystem = new Elevator(new ElevatorIOSim());}
+      case SIMBOT -> {
+        //elevatorSubsystem = new Elevator(new ElevatorIOSim());
+        armSubsystem = new Arm(new ArmIOSim());
+
+      }
     }
 
     configureBindings();
@@ -32,12 +39,16 @@ public class RobotContainer {
 
   /* Driver Controller */
   private void configureBindings() {
-    elevatorSubsystem.setDefaultCommand(elevatorSubsystem.stop());
+    // elevatorSubsystem.setDefaultCommand(elevatorSubsystem.stop());
 
-    driver.a().whileTrue(elevatorSubsystem.runToPosition(.5));
-    driver.x().whileTrue(elevatorSubsystem.runToPosition(1));
-    driver.y().whileTrue(elevatorSubsystem.runToPosition(1.5));
-    driver.b().whileTrue(elevatorSubsystem.runToPosition(2));
+    // driver.a().whileTrue(elevatorSubsystem.runToPosition(.5));
+    // driver.x().whileTrue(elevatorSubsystem.runToPosition(1));
+    // driver.y().whileTrue(elevatorSubsystem.runToPosition(1.5));
+    // driver.b().whileTrue(elevatorSubsystem.runToPosition(2));
+
+
+    armSubsystem.setDefaultCommand(armSubsystem.stop());
+
 
   }
 
