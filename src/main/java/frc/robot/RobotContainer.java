@@ -28,8 +28,8 @@ public class RobotContainer {
       case COMPBOT -> {elevatorSubsystem = new Elevator(new ElevatorIOReal());}
       case DEVBOT -> {}
       case SIMBOT -> {
-        //elevatorSubsystem = new Elevator(new ElevatorIOSim());
-        armSubsystem = new Arm(new ArmIOSim());
+        elevatorSubsystem = new Elevator(new ElevatorIOSim());
+        //armSubsystem = new Arm(new ArmIOSim());
 
       }
     }
@@ -39,17 +39,17 @@ public class RobotContainer {
 
   /* Driver Controller */
   private void configureBindings() {
-    // elevatorSubsystem.setDefaultCommand(elevatorSubsystem.stop());
+    elevatorSubsystem.setDefaultCommand(elevatorSubsystem.stop());
 
-    // driver.a().whileTrue(elevatorSubsystem.runToPosition(.5));
-    // driver.x().whileTrue(elevatorSubsystem.runToPosition(1));
-    // driver.y().whileTrue(elevatorSubsystem.runToPosition(1.5));
-    // driver.b().whileTrue(elevatorSubsystem.runToPosition(2));
+    driver.a().whileTrue(elevatorSubsystem.runToPosition(.5));
+    driver.x().whileTrue(elevatorSubsystem.runToPosition(1));
+    driver.y().whileTrue(elevatorSubsystem.runToPosition(1.5));
+    driver.b().whileTrue(elevatorSubsystem.runToPosition(2));
 
 
-    armSubsystem.setDefaultCommand(armSubsystem.stop());
+    //armSubsystem.setDefaultCommand(armSubsystem.stop());
 
-    driver.a().whileTrue(armSubsystem.runToPosition(.5));
+   // driver.a().whileTrue(armSubsystem.runToPosition(.5));
 
 
 

@@ -15,17 +15,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
+import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class ArmIOSim extends ArmIO {
+
+    ElevatorIOSim elevatorSim = new ElevatorIOSim();
+
     public TalonFXSimState armSimState;
 
-    private final SingleJointedArmSim armSim;
+    public final SingleJointedArmSim armSim;
 
       // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
   private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
   private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
-  private final MechanismLigament2d m_armTower;
-  private final MechanismLigament2d m_arm;
+  //private final MechanismLigament2d m_armTower;
+  public MechanismLigament2d m_arm;
 
 
   public ArmIOSim(){
@@ -44,16 +48,16 @@ public class ArmIOSim extends ArmIO {
           0.0 // Add noise with a std-dev of 1 tick
           );
         
-       m_armTower = m_armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-       m_arm = m_armPivot.append(
-        new MechanismLigament2d(
-            "Arm",
-            30,
-            Units.radiansToDegrees(armSim.getAngleRads()),
-            6,
-            new Color8Bit(Color.kYellow))); 
+       //m_armTower = m_armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+    //    m_arm = elevatorSim.m_elevatorMech2d.append(
+    //     new MechanismLigament2d(
+    //         "Arm",
+    //         30,
+    //         Units.radiansToDegrees(armSim.getAngleRads()),
+    //         6,
+    //         new Color8Bit(Color.kYellow))); 
 
-            SmartDashboard.putData("Arm Sim", m_mech2d);
+    //         SmartDashboard.putData("Arm Sim", m_mech2d);
   }
 
     @Override

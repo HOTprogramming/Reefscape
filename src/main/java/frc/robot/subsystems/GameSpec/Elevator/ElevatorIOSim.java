@@ -10,9 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.subsystems.GameSpec.Arm.ArmIOSim;
 
 public class ElevatorIOSim extends ElevatorIO {
+    ArmIOSim armSimObject = new ArmIOSim();
+
     public TalonFXSimState elevatorMotorSimState;
 
     public ElevatorSim elevatorSim;
@@ -20,7 +24,7 @@ public class ElevatorIOSim extends ElevatorIO {
     // Additional simulation variables
     private final Mechanism2d m_mech2d = new Mechanism2d(5, 5);
     private final MechanismRoot2d m_mech2dRoot = m_mech2d.getRoot("Elevator Root", 2.5, 0);
-    private final MechanismLigament2d m_elevatorMech2d;
+    public final MechanismLigament2d m_elevatorMech2d;
 
     public ElevatorIOSim() {        
         elevatorMotorSimState = elevator.getSimState();
@@ -38,7 +42,7 @@ public class ElevatorIOSim extends ElevatorIO {
         m_elevatorMech2d =
         m_mech2dRoot.append(
             new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), 90, 100, new Color8Bit(235, 137, 52)));
-
+        
         SmartDashboard.putData("Elevator Sim", m_mech2d);
     }
 
