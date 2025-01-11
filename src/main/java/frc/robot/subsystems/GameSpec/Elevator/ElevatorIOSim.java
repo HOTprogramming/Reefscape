@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.GameSpec.Arm.ArmIOSim;
 
 public class ElevatorIOSim extends ElevatorIO {
-    ArmIOSim armSimObject = new ArmIOSim();
+    // ArmIOSim armSimObject = new ArmIOSim();
 
     public TalonFXSimState elevatorMotorSimState;
 
@@ -44,6 +44,11 @@ public class ElevatorIOSim extends ElevatorIO {
             new MechanismLigament2d("Elevator", elevatorSim.getPositionMeters(), 90, 100, new Color8Bit(235, 137, 52)));
         
         SmartDashboard.putData("Elevator Sim", m_mech2d);
+    }
+
+
+    public MechanismLigament2d getElevatorLigament() {
+        return m_elevatorMech2d;
     }
 
     @Override

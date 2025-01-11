@@ -16,7 +16,7 @@ import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class RobotContainer {
   private Elevator elevatorSubsystem = null;
-  //private Arm armSubsystem = null;
+  private Arm armSubsystem = null;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -29,7 +29,7 @@ public class RobotContainer {
       case DEVBOT -> {}
       case SIMBOT -> {
         elevatorSubsystem = new Elevator(new ElevatorIOSim());
-        //armSubsystem = new Arm(new ArmIOSim());
+        armSubsystem = new Arm(new ArmIOSim());
 
       }
     }
@@ -47,9 +47,9 @@ public class RobotContainer {
     driver.b().whileTrue(elevatorSubsystem.runToPosition(2));
 
 
-    //armSubsystem.setDefaultCommand(armSubsystem.stop());
+    armSubsystem.setDefaultCommand(armSubsystem.stop());
 
-   // driver.a().whileTrue(armSubsystem.runToPosition(.5));
+    driver.a().whileTrue(armSubsystem.runToPosition(.5));
 
 
 

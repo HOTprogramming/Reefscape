@@ -19,9 +19,10 @@ import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class ArmIOSim extends ArmIO {
 
-    ElevatorIOSim elevatorSim = new ElevatorIOSim();
 
-    public TalonFXSimState armSimState;
+  ElevatorIOSim elevatorSim = new ElevatorIOSim();
+  
+  public TalonFXSimState armSimState;
 
     public final SingleJointedArmSim armSim;
 
@@ -30,7 +31,6 @@ public class ArmIOSim extends ArmIO {
   private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
   //private final MechanismLigament2d m_armTower;
   public MechanismLigament2d m_arm;
-
 
   public ArmIOSim(){
     armSimState = arm.getSimState();
@@ -49,21 +49,19 @@ public class ArmIOSim extends ArmIO {
           );
         
        //m_armTower = m_armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
-    //    m_arm = elevatorSim.m_elevatorMech2d.append(
-    //     new MechanismLigament2d(
-    //         "Arm",
-    //         30,
-    //         Units.radiansToDegrees(armSim.getAngleRads()),
-    //         6,
-    //         new Color8Bit(Color.kYellow))); 
-
-    //         SmartDashboard.putData("Arm Sim", m_mech2d);
+       m_arm = elevatorSim.getElevatorLigament().append(
+        new MechanismLigament2d(
+            "Arm",
+            30, // Length of the arm
+            Units.radiansToDegrees(armSim.getAngleRads()), // Initial angle
+            6, // Line width
+            new Color8Bit(Color.kYellow)));
   }
 
     @Override
     public void periodic() {
 
-            // In this method, we update our simulation of what our arm is doing
+    // In this method, we update our simulation of what our arm is doing
     // First, we set our "inputs" (voltages)
     armSim.setInput(arm.get() * RobotController.getBatteryVoltage());
 
