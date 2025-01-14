@@ -7,6 +7,7 @@ package frc.robot.subsystems.GameSpec.Elevator;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,6 +15,8 @@ import frc.robot.subsystems.GameSpec.Master;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIO.ElevatorIOStats;
 
 public class Elevator extends SubsystemBase {
+  
+
   public FunctionalCommand testCommand;
 
   Master mo = new Master();
@@ -29,12 +32,10 @@ public class Elevator extends SubsystemBase {
   private GenericEntry elevatorSupplyCurrent;
   private GenericEntry elevatorStatorCurrent;
   private GenericEntry elevatorTemp;
-
-  public double elevatorCommandedPos;
+  private GenericEntry elevatorCommandedPos;
   
   public Elevator(ElevatorIO io) {
     this.io = io; 
-
     this.stats = ElevatorIO.stats;
 
     this.elevatorShuffleboard = Shuffleboard.getTab("Elevator");
@@ -44,7 +45,9 @@ public class Elevator extends SubsystemBase {
     elevatorSupplyCurrent = this.elevatorShuffleboard.add("Elevator Supply Current", 0.0).getEntry();
     elevatorStatorCurrent = this.elevatorShuffleboard.add("Elevator Stator Current", 0.0).getEntry();
     elevatorTemp = this.elevatorShuffleboard.add("Elevator Temp", 0.0).getEntry();
+    elevatorCommandedPos = this.elevatorShuffleboard.add("Elevator Commanded Position", 0.0).getEntry();
   }
+
 
   @Override
   public void periodic() {
@@ -67,14 +70,63 @@ public class Elevator extends SubsystemBase {
 
   public Command runToPosition(double position){
     return run(() -> {
+        this.elevatorCommandedPos.setDouble(position);
         io.setElevatorMotorControl(position);
     });
+  }
+
+  private FunctionalCommand elevatorCommand(double position){
+    return new FunctionalCommand(
+      () -> this.elevatorCommandedPos.setDouble(position),
+      () -> io.setElevatorMotorControl(position),
+      interrupted -> io.setElevatorMotorControl(position), 
+      () -> checkRange(.1),
+      this);
+  }
+
+  public Command goToL4(){
+    return elevatorCommand(ElevatorConstants.l4Height);
+  }
+
+  public Command goToL3(){
+    return elevatorCommand(ElevatorConstants.l3Height);
+  }
+
+  public Command goToL2(){
+    return elevatorCommand(ElevatorConstants.l2Height);
+  }
+
+  public Command goToL1(){
+    return elevatorCommand(ElevatorConstants.l1Height);
+  }
+
+  public Command goToNet(){
+    return elevatorCommand(ElevatorConstants.netHeight);
+  }
+
+  public Command goToIntakeCoral(){
+    return elevatorCommand(ElevatorConstants.intakeCoralHeight);
+  }
+
+  public Command goToIntakeAlgae(){
+    return elevatorCommand(ElevatorConstants.intakeAlgaeHeight);
   }
 
   public Command stop(){
     return run(() -> {
         io.stop();
     });  
+  }
+
+  public Command hold(){
+    return run(() -> {
+      io.setElevatorMotorControl(elevatorCommandedPos.getDouble(0));
+    });
+  }
+ 
+   public boolean checkRange(double deadband){
+    return (stats.elevatorPosition >= elevatorCommandedPos.getDouble(0) - deadband) && 
+           (stats.elevatorPosition <= elevatorCommandedPos.getDouble(0) + deadband);
   }
 
   @Override

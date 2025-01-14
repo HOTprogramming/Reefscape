@@ -1,11 +1,17 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
+import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain.Drive;
@@ -16,12 +22,14 @@ import frc.robot.subsystems.GameSpec.Arm.ArmIOSim;
 import frc.robot.subsystems.GameSpec.Elevator.Elevator;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOReal;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
-
+import frc.robot.subsystems.Drivetrain.Drive;
+import frc.robot.subsystems.Drivetrain.DriveIO;
+import frc.robot.subsystems.Drivetrain.DriveKraken;
+import frc.robot.subsystems.Drivetrain.DriveSim;
 
 public class RobotContainer {
+  private Elevator elevatorSubsystem;
   public Drive drivetrain;
-
-  private Elevator elevatorSubsystem = null;
   private Arm armSubsystem = null;
 
   private final CommandXboxController driver = new CommandXboxController(0);
@@ -30,8 +38,8 @@ public class RobotContainer {
   public RobotContainer() {
     switch (Constants.getRobot()) {
       case COMPBOT -> {
-        this.drivetrain = new Drive(new DriveKraken());
-        this.elevatorSubsystem = new Elevator(new ElevatorIOReal());
+        elevatorSubsystem = new Elevator(new ElevatorIOReal());   
+        drivetrain = new Drive(new DriveKraken());
       }
       case DEVBOT -> {}
       case SIMBOT -> {
@@ -44,21 +52,26 @@ public class RobotContainer {
       }
     }
 
+    NamedCommands.registerCommand("Elevator Algae Intake",  elevatorSubsystem.goToIntakeAlgae());
+    NamedCommands.registerCommand("Elevator Coral Intake", elevatorSubsystem.goToIntakeCoral());
+    NamedCommands.registerCommand("Elevator Net", elevatorSubsystem.goToNet());
+    NamedCommands.registerCommand("Elevator L4", elevatorSubsystem.goToL4());
+    NamedCommands.registerCommand("Elevator L3", elevatorSubsystem.goToL3());
+    NamedCommands.registerCommand("Elevator L2", elevatorSubsystem.goToL2());
+    NamedCommands.registerCommand("Elevator L1", elevatorSubsystem.goToL1());
 
     configureBindings();
   }
 
-  private void configureSimpleBindings() {
-    drivetrain.setDefaultCommand(
-      drivetrain.run(() -> drivetrain.teleopDrive( 
-        Math.abs(driver.getLeftY()) >= 0.1 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.1 ? -driver.getLeftX() : 0,
-        Math.abs(driver.getRightX()) >= 0.15 ? -driver.getRightX() : 0)
-      )
-    );
-  }
+  private void configureBindings() {    
+    operator.a().whileTrue(NamedCommands.getCommand("Elevator L4"));
+    operator.b().whileTrue(NamedCommands.getCommand("Elevator L3"));
+    operator.x().whileTrue(NamedCommands.getCommand("Elevator L2"));
+    operator.y().whileTrue(NamedCommands.getCommand("Elevator L1"));
+    operator.povUp().whileTrue(NamedCommands.getCommand("Elevator Net"));
+    operator.povRight().whileTrue(NamedCommands.getCommand("Elevator Coral Intake"));
+    operator.povLeft().whileTrue(NamedCommands.getCommand("Elevator Algae Intake"));
 
-  private void configureBindings() {
     drivetrain.setDefaultCommand
       (drivetrain.run(() -> {
             drivetrain.headingControl(
@@ -127,15 +140,6 @@ public class RobotContainer {
 
       driver.start().onTrue(drivetrain.resetPidgeon());
 
-
-      elevatorSubsystem.setDefaultCommand(elevatorSubsystem.stop());
-
-      driver.a().whileTrue(elevatorSubsystem.runToPosition(.5));
-      driver.x().whileTrue(elevatorSubsystem.runToPosition(1));
-      driver.y().whileTrue(elevatorSubsystem.runToPosition(1.5));
-      driver.b().whileTrue(elevatorSubsystem.runToPosition(2));
-
-
     armSubsystem.setDefaultCommand(armSubsystem.stop());
 
     driver.a().whileTrue(armSubsystem.runToPosition(.5));
@@ -145,7 +149,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    //return new PathPlannerAuto("New Auto");
+    return new PathPlannerAuto("New Auto");
   }
 
 }
