@@ -1,18 +1,16 @@
 package frc.robot.subsystems.Drivetrain;
 
-import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
-
-import java.util.function.Supplier;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.DriveConfig;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,9 +22,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-
-import com.ctre.phoenix6.swerve.*;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -258,7 +253,7 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
 
     @Override
     public void updateStats(DriveIOdata stats) {
-        stats.frontLeftDriveconnected =
+        stats.driveConnected.put(SwervePoses.FRONT_LEFT,
         BaseStatusSignal.refreshAll(
         frontLeftDrivePosition,
         frontLeftDriveVelocity,
@@ -266,9 +261,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         frontLeftDriveSupplyCurrent,
         frontLeftDriveTorqueCurrent,
         frontLeftDriveTempCelsius)
-        .isOK();
+        .isOK()
+        );
         
-        stats.frontRightDriveconnected =
+        stats.driveConnected.put(SwervePoses.FRONT_RIGHT,
         BaseStatusSignal.refreshAll(
         frontRightDrivePosition,
         frontRightDriveVelocity,
@@ -276,9 +272,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         frontRightDriveSupplyCurrent,
         frontRightDriveTorqueCurrent,
         frontRightDriveTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.backLeftDriveconnected =
+        stats.driveConnected.put(SwervePoses.BACK_LEFT,
         BaseStatusSignal.refreshAll(
         backLeftDrivePosition,
         backLeftDriveVelocity,
@@ -286,9 +283,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         backLeftDriveSupplyCurrent,
         backLeftDriveTorqueCurrent,
         backLeftDriveTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.backRightDriveconnected =
+        stats.driveConnected.put(SwervePoses.BACK_RIGHT,
         BaseStatusSignal.refreshAll(
         backRightDrivePosition,
         backRightDriveVelocity,
@@ -296,9 +294,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         backRightDriveSupplyCurrent,
         backRightDriveTorqueCurrent,
         backRightDriveTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.frontLeftSteerconnected =
+        stats.steerConnected.put(SwervePoses.FRONT_LEFT,
         BaseStatusSignal.refreshAll(
         frontLeftSteerPosition,
         frontLeftSteerVelocity,
@@ -306,9 +305,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         frontLeftSteerSupplyCurrent,
         frontLeftSteerTorqueCurrent,
         frontLeftSteerTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.frontRightSteerconnected =
+        stats.steerConnected.put(SwervePoses.FRONT_RIGHT,
         BaseStatusSignal.refreshAll(
         frontRightSteerPosition,
         frontRightSteerVelocity,
@@ -316,9 +316,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         frontRightSteerSupplyCurrent,
         frontRightSteerTorqueCurrent,
         frontRightSteerTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.backLeftSteerconnected =
+        stats.steerConnected.put(SwervePoses.BACK_LEFT,
         BaseStatusSignal.refreshAll(
         backLeftSteerPosition,
         backLeftSteerVelocity,
@@ -326,9 +327,10 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         backLeftSteerSupplyCurrent,
         backLeftSteerTorqueCurrent,
         backLeftSteerTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.backRightSteerconnected =
+        stats.steerConnected.put(SwervePoses.BACK_RIGHT,
         BaseStatusSignal.refreshAll(
         backRightSteerPosition,
         backRightSteerVelocity,
@@ -336,63 +338,38 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         backRightSteerSupplyCurrent,
         backRightSteerTorqueCurrent,
         backRightSteerTempCelsius)
-        .isOK();
+        .isOK()
+        );
 
-        stats.frontLeftDrivePositionRads = frontLeftDrivePosition.getValueAsDouble();
-        stats.frontLeftDriveVelocityRpm = frontLeftDriveVelocity.getValueAsDouble();
-        stats.frontLeftDriveAppliedVolts = frontLeftDriveAppliedVolts.getValueAsDouble();
-        stats.frontLeftDriveSupplyCurrentAmps = frontLeftDriveSupplyCurrent.getValueAsDouble();
-        stats.frontLeftDriveTorqueCurrentAmps = frontLeftDriveTorqueCurrent.getValueAsDouble();
-        stats.frontLeftDriveTempCelsius = frontLeftDriveTempCelsius.getValueAsDouble();
+        this.iOdata.driveConnected.forEach((key, connected) -> {
+            if(connected) {
+                this.iOdata.driveVelocity.put(key, getModule(key.ordinal()).getDriveMotor().getVelocity().getValueAsDouble());
+                this.iOdata.driveVolts.put(key, getModule(key.ordinal()).getDriveMotor().getMotorVoltage().getValueAsDouble());
+                this.iOdata.driveSupplyCurrent.put(key, getModule(key.ordinal()).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+                this.iOdata.driveTorqueCurrent.put(key, getModule(key.ordinal()).getDriveMotor().getTorqueCurrent().getValueAsDouble());
+                this.iOdata.driveTemp.put(key, getModule(key.ordinal()).getDriveMotor().getDeviceTemp().getValueAsDouble());
 
-        stats.frontRightDrivePositionRads = frontRightDrivePosition.getValueAsDouble();
-        stats.frontRightDriveVelocityRpm = frontRightDriveVelocity.getValueAsDouble();
-        stats.frontRightDriveAppliedVolts = frontRightDriveAppliedVolts.getValueAsDouble();
-        stats.frontRightDriveSupplyCurrentAmps = frontRightDriveSupplyCurrent.getValueAsDouble();
-        stats.frontRightDriveTorqueCurrentAmps = frontRightDriveTorqueCurrent.getValueAsDouble();
-        stats.frontRightDriveTempCelsius = frontRightDriveTempCelsius.getValueAsDouble();
+                SmartDashboard.putNumber(key.toString() + "_Velo", this.iOdata.driveVelocity.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Volts", this.iOdata.driveVolts.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Supply", this.iOdata.driveSupplyCurrent.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Torque", this.iOdata.driveTorqueCurrent.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Temp", this.iOdata.driveTemp.get(key));
 
-        stats.backLeftDrivePositionRads = backLeftDrivePosition.getValueAsDouble();
-        stats.backLeftDriveVelocityRpm = backLeftDriveVelocity.getValueAsDouble();
-        stats.backLeftDriveAppliedVolts = backLeftDriveAppliedVolts.getValueAsDouble();
-        stats.backLeftDriveSupplyCurrentAmps = backLeftDriveSupplyCurrent.getValueAsDouble();
-        stats.backLeftDriveTorqueCurrentAmps = backLeftDriveTorqueCurrent.getValueAsDouble();
-        stats.backLeftDriveTempCelsius = backLeftDriveTempCelsius.getValueAsDouble();
+                this.iOdata.steerPosition.put(key, getModule(key.ordinal()).getSteerMotor().getPosition().getValueAsDouble());
+                this.iOdata.steerVelocity.put(key, getModule(key.ordinal()).getSteerMotor().getVelocity().getValueAsDouble());
+                this.iOdata.steerVolts.put(key, getModule(key.ordinal()).getSteerMotor().getMotorVoltage().getValueAsDouble());
+                this.iOdata.steerSupplyCurrent.put(key, getModule(key.ordinal()).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+                this.iOdata.steerTorqueCurrent.put(key, getModule(key.ordinal()).getSteerMotor().getTorqueCurrent().getValueAsDouble());
+                this.iOdata.steerTemp.put(key, getModule(key.ordinal()).getSteerMotor().getDeviceTemp().getValueAsDouble());
 
-        stats.backRightDrivePositionRads = backRightDrivePosition.getValueAsDouble();
-        stats.backRightDriveVelocityRpm = backRightDriveVelocity.getValueAsDouble();
-        stats.backRightDriveAppliedVolts = backRightDriveAppliedVolts.getValueAsDouble();
-        stats.backRightDriveSupplyCurrentAmps = backRightDriveSupplyCurrent.getValueAsDouble();
-        stats.backRightDriveTorqueCurrentAmps = backRightDriveTorqueCurrent.getValueAsDouble();
-        stats.backRightDriveTempCelsius = backRightDriveTempCelsius.getValueAsDouble();
-
-        stats.frontLeftSteerPositionRads = frontLeftSteerPosition.getValueAsDouble();
-        stats.frontLeftSteerVelocityRpm = frontLeftSteerVelocity.getValueAsDouble();
-        stats.frontLeftSteerAppliedVolts = frontLeftSteerAppliedVolts.getValueAsDouble();
-        stats.frontLeftSteerSupplyCurrentAmps = frontLeftSteerSupplyCurrent.getValueAsDouble();
-        stats.frontLeftSteerTorqueCurrentAmps = frontLeftSteerTorqueCurrent.getValueAsDouble();
-        stats.frontLeftSteerTempCelsius = frontLeftSteerTempCelsius.getValueAsDouble();
-
-        stats.frontRightSteerPositionRads = frontRightSteerPosition.getValueAsDouble();
-        stats.frontRightSteerVelocityRpm = frontRightSteerVelocity.getValueAsDouble();
-        stats.frontRightSteerAppliedVolts = frontRightSteerAppliedVolts.getValueAsDouble();
-        stats.frontRightSteerSupplyCurrentAmps = frontRightSteerSupplyCurrent.getValueAsDouble();
-        stats.frontRightSteerTorqueCurrentAmps = frontRightSteerTorqueCurrent.getValueAsDouble();
-        stats.frontRightSteerTempCelsius = frontRightSteerTempCelsius.getValueAsDouble();
-
-        stats.backLeftSteerPositionRads = backLeftSteerPosition.getValueAsDouble();
-        stats.backLeftSteerVelocityRpm = backLeftSteerVelocity.getValueAsDouble();
-        stats.backLeftSteerAppliedVolts = backLeftSteerAppliedVolts.getValueAsDouble();
-        stats.backLeftSteerSupplyCurrentAmps = backLeftSteerSupplyCurrent.getValueAsDouble();
-        stats.backLeftSteerTorqueCurrentAmps = backLeftSteerTorqueCurrent.getValueAsDouble();
-        stats.backLeftSteerTempCelsius = backLeftSteerTempCelsius.getValueAsDouble();
-
-        stats.backRightSteerPositionRads = backRightSteerPosition.getValueAsDouble();
-        stats.backRightSteerVelocityRpm = backRightSteerVelocity.getValueAsDouble();
-        stats.backRightSteerAppliedVolts = backRightSteerAppliedVolts.getValueAsDouble();
-        stats.backRightSteerSupplyCurrentAmps = backRightSteerSupplyCurrent.getValueAsDouble();
-        stats.backRightSteerTorqueCurrentAmps = backRightSteerTorqueCurrent.getValueAsDouble();
-        stats.backRightSteerTempCelsius = backRightSteerTempCelsius.getValueAsDouble();
+                SmartDashboard.putNumber(key.toString() + "_Position", this.iOdata.steerPosition.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Velo", this.iOdata.steerVelocity.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Volts", this.iOdata.steerVolts.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Supply", this.iOdata.steerSupplyCurrent.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Torque", this.iOdata.steerTorqueCurrent.get(key));
+                SmartDashboard.putNumber(key.toString() + "_Temp", this.iOdata.steerTemp.get(key));
+            }
+        });
     }
 
     @Override
