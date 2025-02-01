@@ -337,6 +337,62 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
         backRightSteerTorqueCurrent,
         backRightSteerTempCelsius)
         .isOK();
+
+        stats.frontLeftDrivePositionRads = frontLeftDrivePosition.getValueAsDouble();
+        stats.frontLeftDriveVelocityRpm = frontLeftDriveVelocity.getValueAsDouble();
+        stats.frontLeftDriveAppliedVolts = frontLeftDriveAppliedVolts.getValueAsDouble();
+        stats.frontLeftDriveSupplyCurrentAmps = frontLeftDriveSupplyCurrent.getValueAsDouble();
+        stats.frontLeftDriveTorqueCurrentAmps = frontLeftDriveTorqueCurrent.getValueAsDouble();
+        stats.frontLeftDriveTempCelsius = frontLeftDriveTempCelsius.getValueAsDouble();
+
+        stats.frontRightDrivePositionRads = frontRightDrivePosition.getValueAsDouble();
+        stats.frontRightDriveVelocityRpm = frontRightDriveVelocity.getValueAsDouble();
+        stats.frontRightDriveAppliedVolts = frontRightDriveAppliedVolts.getValueAsDouble();
+        stats.frontRightDriveSupplyCurrentAmps = frontRightDriveSupplyCurrent.getValueAsDouble();
+        stats.frontRightDriveTorqueCurrentAmps = frontRightDriveTorqueCurrent.getValueAsDouble();
+        stats.frontRightDriveTempCelsius = frontRightDriveTempCelsius.getValueAsDouble();
+
+        stats.backLeftDrivePositionRads = backLeftDrivePosition.getValueAsDouble();
+        stats.backLeftDriveVelocityRpm = backLeftDriveVelocity.getValueAsDouble();
+        stats.backLeftDriveAppliedVolts = backLeftDriveAppliedVolts.getValueAsDouble();
+        stats.backLeftDriveSupplyCurrentAmps = backLeftDriveSupplyCurrent.getValueAsDouble();
+        stats.backLeftDriveTorqueCurrentAmps = backLeftDriveTorqueCurrent.getValueAsDouble();
+        stats.backLeftDriveTempCelsius = backLeftDriveTempCelsius.getValueAsDouble();
+
+        stats.backRightDrivePositionRads = backRightDrivePosition.getValueAsDouble();
+        stats.backRightDriveVelocityRpm = backRightDriveVelocity.getValueAsDouble();
+        stats.backRightDriveAppliedVolts = backRightDriveAppliedVolts.getValueAsDouble();
+        stats.backRightDriveSupplyCurrentAmps = backRightDriveSupplyCurrent.getValueAsDouble();
+        stats.backRightDriveTorqueCurrentAmps = backRightDriveTorqueCurrent.getValueAsDouble();
+        stats.backRightDriveTempCelsius = backRightDriveTempCelsius.getValueAsDouble();
+
+        stats.frontLeftSteerPositionRads = frontLeftSteerPosition.getValueAsDouble();
+        stats.frontLeftSteerVelocityRpm = frontLeftSteerVelocity.getValueAsDouble();
+        stats.frontLeftSteerAppliedVolts = frontLeftSteerAppliedVolts.getValueAsDouble();
+        stats.frontLeftSteerSupplyCurrentAmps = frontLeftSteerSupplyCurrent.getValueAsDouble();
+        stats.frontLeftSteerTorqueCurrentAmps = frontLeftSteerTorqueCurrent.getValueAsDouble();
+        stats.frontLeftSteerTempCelsius = frontLeftSteerTempCelsius.getValueAsDouble();
+
+        stats.frontRightSteerPositionRads = frontRightSteerPosition.getValueAsDouble();
+        stats.frontRightSteerVelocityRpm = frontRightSteerVelocity.getValueAsDouble();
+        stats.frontRightSteerAppliedVolts = frontRightSteerAppliedVolts.getValueAsDouble();
+        stats.frontRightSteerSupplyCurrentAmps = frontRightSteerSupplyCurrent.getValueAsDouble();
+        stats.frontRightSteerTorqueCurrentAmps = frontRightSteerTorqueCurrent.getValueAsDouble();
+        stats.frontRightSteerTempCelsius = frontRightSteerTempCelsius.getValueAsDouble();
+
+        stats.backLeftSteerPositionRads = backLeftSteerPosition.getValueAsDouble();
+        stats.backLeftSteerVelocityRpm = backLeftSteerVelocity.getValueAsDouble();
+        stats.backLeftSteerAppliedVolts = backLeftSteerAppliedVolts.getValueAsDouble();
+        stats.backLeftSteerSupplyCurrentAmps = backLeftSteerSupplyCurrent.getValueAsDouble();
+        stats.backLeftSteerTorqueCurrentAmps = backLeftSteerTorqueCurrent.getValueAsDouble();
+        stats.backLeftSteerTempCelsius = backLeftSteerTempCelsius.getValueAsDouble();
+
+        stats.backRightSteerPositionRads = backRightSteerPosition.getValueAsDouble();
+        stats.backRightSteerVelocityRpm = backRightSteerVelocity.getValueAsDouble();
+        stats.backRightSteerAppliedVolts = backRightSteerAppliedVolts.getValueAsDouble();
+        stats.backRightSteerSupplyCurrentAmps = backRightSteerSupplyCurrent.getValueAsDouble();
+        stats.backRightSteerTorqueCurrentAmps = backRightSteerTorqueCurrent.getValueAsDouble();
+        stats.backRightSteerTempCelsius = backRightSteerTempCelsius.getValueAsDouble();
     }
 
     @Override
