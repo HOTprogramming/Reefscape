@@ -2,6 +2,8 @@ package frc.robot.subsystems.Drivetrain;
 
 import static frc.robot.subsystems.Drivetrain.DriveConstants.DriveConfig;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
@@ -43,61 +45,21 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
 
     private SwerveDriveState currentState;
 
-    private final StatusSignal<Angle> frontLeftDrivePosition;
-    private final StatusSignal<AngularVelocity> frontLeftDriveVelocity;
-    private final StatusSignal<Voltage> frontLeftDriveAppliedVolts;
-    private final StatusSignal<Current> frontLeftDriveSupplyCurrent;
-    private final StatusSignal<Current> frontLeftDriveTorqueCurrent;
-    private final StatusSignal<Temperature> frontLeftDriveTempCelsius;
+    private final ArrayList<StatusSignal<Angle>> drivePosition;
+    private final ArrayList<StatusSignal<AngularVelocity>> driveVelocity;
+    private final ArrayList<StatusSignal<Voltage>> driveAppliedVolts;
+    private final ArrayList<StatusSignal<Current>> driveSupplyCurrent;
+    private final ArrayList<StatusSignal<Current>> driveTorqueCurrent;
+    private final ArrayList<StatusSignal<Temperature>> driveTempCelsius;
 
-    private final StatusSignal<Angle> frontRightDrivePosition;
-    private final StatusSignal<AngularVelocity> frontRightDriveVelocity;
-    private final StatusSignal<Voltage> frontRightDriveAppliedVolts;
-    private final StatusSignal<Current> frontRightDriveSupplyCurrent;
-    private final StatusSignal<Current> frontRightDriveTorqueCurrent;
-    private final StatusSignal<Temperature> frontRightDriveTempCelsius;
+    private final ArrayList<StatusSignal<Angle>> steerPosition;
+    private final ArrayList<StatusSignal<AngularVelocity>> steerVelocity;
+    private final ArrayList<StatusSignal<Voltage>> steerAppliedVolts;
+    private final ArrayList<StatusSignal<Current>> steerSupplyCurrent;
+    private final ArrayList<StatusSignal<Current>> steerTorqueCurrent;
+    private final ArrayList<StatusSignal<Temperature>> steerTempCelsius;
 
-    private final StatusSignal<Angle> backLeftDrivePosition;
-    private final StatusSignal<AngularVelocity> backLeftDriveVelocity;
-    private final StatusSignal<Voltage> backLeftDriveAppliedVolts;
-    private final StatusSignal<Current> backLeftDriveSupplyCurrent;
-    private final StatusSignal<Current> backLeftDriveTorqueCurrent;
-    private final StatusSignal<Temperature> backLeftDriveTempCelsius;
-
-    private final StatusSignal<Angle> backRightDrivePosition;
-    private final StatusSignal<AngularVelocity> backRightDriveVelocity;
-    private final StatusSignal<Voltage> backRightDriveAppliedVolts;
-    private final StatusSignal<Current> backRightDriveSupplyCurrent;
-    private final StatusSignal<Current> backRightDriveTorqueCurrent;
-    private final StatusSignal<Temperature> backRightDriveTempCelsius;
-
-    private final StatusSignal<Angle> frontLeftSteerPosition;
-    private final StatusSignal<AngularVelocity> frontLeftSteerVelocity;
-    private final StatusSignal<Voltage> frontLeftSteerAppliedVolts;
-    private final StatusSignal<Current> frontLeftSteerSupplyCurrent;
-    private final StatusSignal<Current> frontLeftSteerTorqueCurrent;
-    private final StatusSignal<Temperature> frontLeftSteerTempCelsius;
-
-    private final StatusSignal<Angle> frontRightSteerPosition;
-    private final StatusSignal<AngularVelocity> frontRightSteerVelocity;
-    private final StatusSignal<Voltage> frontRightSteerAppliedVolts;
-    private final StatusSignal<Current> frontRightSteerSupplyCurrent;
-    private final StatusSignal<Current> frontRightSteerTorqueCurrent;
-    private final StatusSignal<Temperature> frontRightSteerTempCelsius;
-
-    private final StatusSignal<Angle> backLeftSteerPosition;
-    private final StatusSignal<AngularVelocity> backLeftSteerVelocity;
-    private final StatusSignal<Voltage> backLeftSteerAppliedVolts;
-    private final StatusSignal<Current> backLeftSteerSupplyCurrent;
-    private final StatusSignal<Current> backLeftSteerTorqueCurrent;
-    private final StatusSignal<Temperature> backLeftSteerTempCelsius;
-
-    private final StatusSignal<Angle> backRightSteerPosition;
-    private final StatusSignal<AngularVelocity> backRightSteerVelocity;
-    private final StatusSignal<Voltage> backRightSteerAppliedVolts;
-    private final StatusSignal<Current> backRightSteerSupplyCurrent;
-    private final StatusSignal<Current> backRightSteerTorqueCurrent;
-    private final StatusSignal<Temperature> backRightSteerTempCelsius;
+    private SwervePoses swervePoses;
 
     private DriveIOdata iOdata = new DriveIOdata();
 
@@ -117,121 +79,54 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
 
         this.iOdata.m_moduleLocations = getModuleLocations();
 
-        frontLeftDrivePosition = getModule(0).getDriveMotor().getPosition();
-        frontLeftDriveVelocity = getModule(0).getDriveMotor().getVelocity();
-        frontLeftDriveAppliedVolts = getModule(0).getDriveMotor().getMotorVoltage();
-        frontLeftDriveSupplyCurrent = getModule(0).getDriveMotor().getSupplyCurrent();
-        frontLeftDriveTorqueCurrent = getModule(0).getDriveMotor().getTorqueCurrent();
-        frontLeftDriveTempCelsius = getModule(0).getDriveMotor().getDeviceTemp();
+        drivePosition = new ArrayList<>();
+        driveVelocity = new ArrayList<>();
+        driveAppliedVolts = new ArrayList<>();
+        driveSupplyCurrent = new ArrayList<>();
+        driveTorqueCurrent = new ArrayList<>();
+        driveTempCelsius = new ArrayList<>();
 
-        frontRightDrivePosition = getModule(1).getDriveMotor().getPosition();
-        frontRightDriveVelocity = getModule(1).getDriveMotor().getVelocity();
-        frontRightDriveAppliedVolts = getModule(1).getDriveMotor().getMotorVoltage();
-        frontRightDriveSupplyCurrent = getModule(1).getDriveMotor().getSupplyCurrent();
-        frontRightDriveTorqueCurrent = getModule(1).getDriveMotor().getTorqueCurrent();
-        frontRightDriveTempCelsius = getModule(1).getDriveMotor().getDeviceTemp();
+        steerPosition = new ArrayList<>();
+        steerVelocity = new ArrayList<>();
+        steerAppliedVolts = new ArrayList<>();
+        steerSupplyCurrent = new ArrayList<>();
+        steerTorqueCurrent = new ArrayList<>();
+        steerTempCelsius = new ArrayList<>();
 
-        backLeftDrivePosition = getModule(2).getDriveMotor().getPosition();
-        backLeftDriveVelocity = getModule(2).getDriveMotor().getVelocity();
-        backLeftDriveAppliedVolts = getModule(2).getDriveMotor().getMotorVoltage();
-        backLeftDriveSupplyCurrent = getModule(2).getDriveMotor().getSupplyCurrent();
-        backLeftDriveTorqueCurrent = getModule(2).getDriveMotor().getTorqueCurrent();
-        backLeftDriveTempCelsius = getModule(2).getDriveMotor().getDeviceTemp();
+        swervePoses = SwervePoses.FRONT_LEFT;
 
-        backRightDrivePosition = getModule(3).getDriveMotor().getPosition();
-        backRightDriveVelocity = getModule(3).getDriveMotor().getVelocity();
-        backRightDriveAppliedVolts = getModule(3).getDriveMotor().getMotorVoltage();
-        backRightDriveSupplyCurrent = getModule(3).getDriveMotor().getSupplyCurrent();
-        backRightDriveTorqueCurrent = getModule(3).getDriveMotor().getTorqueCurrent();
-        backRightDriveTempCelsius = getModule(3).getDriveMotor().getDeviceTemp();
+        for (int i = 0; i==3; ++i) {
+            drivePosition.add(getModule(i).getDriveMotor().getPosition());
+            driveVelocity.add(getModule(i).getDriveMotor().getVelocity());
+            driveAppliedVolts.add(getModule(i).getDriveMotor().getMotorVoltage());
+            driveSupplyCurrent.add(getModule(i).getDriveMotor().getSupplyCurrent());
+            driveTorqueCurrent.add(getModule(i).getDriveMotor().getTorqueCurrent());
+            driveTempCelsius.add(getModule(i).getDriveMotor().getDeviceTemp());
 
-        frontLeftSteerPosition = getModule(0).getSteerMotor().getPosition();
-        frontLeftSteerVelocity = getModule(0).getSteerMotor().getVelocity();
-        frontLeftSteerAppliedVolts = getModule(0).getSteerMotor().getMotorVoltage();
-        frontLeftSteerSupplyCurrent = getModule(0).getSteerMotor().getSupplyCurrent();
-        frontLeftSteerTorqueCurrent = getModule(0).getSteerMotor().getTorqueCurrent();
-        frontLeftSteerTempCelsius = getModule(0).getSteerMotor().getDeviceTemp();
+            steerPosition.add(getModule(i).getSteerMotor().getPosition());
+            steerVelocity.add(getModule(i).getSteerMotor().getVelocity());
+            steerAppliedVolts.add(getModule(i).getSteerMotor().getMotorVoltage());
+            steerSupplyCurrent.add(getModule(i).getSteerMotor().getSupplyCurrent());
+            steerTorqueCurrent.add(getModule(i).getSteerMotor().getTorqueCurrent());
+            steerTempCelsius.add(getModule(i).getSteerMotor().getDeviceTemp());
 
-        frontRightSteerPosition = getModule(1).getSteerMotor().getPosition();
-        frontRightSteerVelocity = getModule(1).getSteerMotor().getVelocity();
-        frontRightSteerAppliedVolts = getModule(1).getSteerMotor().getMotorVoltage();
-        frontRightSteerSupplyCurrent = getModule(1).getSteerMotor().getSupplyCurrent();
-        frontRightSteerTorqueCurrent = getModule(1).getSteerMotor().getTorqueCurrent();
-        frontRightSteerTempCelsius = getModule(1).getSteerMotor().getDeviceTemp();
+            BaseStatusSignal.setUpdateFrequencyForAll(
+                100.0,
+                drivePosition.get(i),
+                driveVelocity.get(i),
+                driveAppliedVolts.get(i),
+                driveSupplyCurrent.get(i),
+                driveTorqueCurrent.get(i),
+                driveTempCelsius.get(i),
 
-        backLeftSteerPosition = getModule(2).getSteerMotor().getPosition();
-        backLeftSteerVelocity = getModule(2).getSteerMotor().getVelocity();
-        backLeftSteerAppliedVolts = getModule(2).getSteerMotor().getMotorVoltage();
-        backLeftSteerSupplyCurrent = getModule(2).getSteerMotor().getSupplyCurrent();
-        backLeftSteerTorqueCurrent = getModule(2).getSteerMotor().getTorqueCurrent();
-        backLeftSteerTempCelsius = getModule(2).getSteerMotor().getDeviceTemp();
-
-        backRightSteerPosition = getModule(3).getSteerMotor().getPosition();
-        backRightSteerVelocity = getModule(3).getSteerMotor().getVelocity();
-        backRightSteerAppliedVolts = getModule(3).getSteerMotor().getMotorVoltage();
-        backRightSteerSupplyCurrent = getModule(3).getSteerMotor().getSupplyCurrent();
-        backRightSteerTorqueCurrent = getModule(3).getSteerMotor().getTorqueCurrent();
-        backRightSteerTempCelsius = getModule(3).getSteerMotor().getDeviceTemp();
-        
-
-        BaseStatusSignal.setUpdateFrequencyForAll(
-            100.0,
-             frontLeftDrivePosition,
-             frontLeftDriveVelocity,
-             frontLeftDriveAppliedVolts,
-             frontLeftDriveSupplyCurrent,
-             frontLeftDriveTorqueCurrent,
-             frontLeftDriveTempCelsius,
-        
-             frontRightDrivePosition,
-             frontRightDriveVelocity,
-             frontRightDriveAppliedVolts,
-             frontRightDriveSupplyCurrent,
-             frontRightDriveTorqueCurrent,
-             frontRightDriveTempCelsius,
-        
-             backLeftDrivePosition,
-             backLeftDriveVelocity,
-             backLeftDriveAppliedVolts,
-             backLeftDriveSupplyCurrent,
-             backLeftDriveTorqueCurrent,
-             backLeftDriveTempCelsius,
-        
-             backRightDrivePosition,
-             backRightDriveVelocity,
-             backRightDriveAppliedVolts,
-             backRightDriveSupplyCurrent,
-             backRightDriveTorqueCurrent,
-             backRightDriveTempCelsius,
-
-             frontLeftSteerPosition,
-             frontLeftSteerVelocity,
-             frontLeftSteerAppliedVolts,
-             frontLeftSteerSupplyCurrent,
-             frontLeftSteerTorqueCurrent,
-             frontLeftSteerTempCelsius,
-        
-             frontRightSteerPosition,
-             frontRightSteerVelocity,
-             frontRightSteerAppliedVolts,
-             frontRightSteerSupplyCurrent,
-             frontRightSteerTorqueCurrent,
-             frontRightSteerTempCelsius,
-        
-             backLeftSteerPosition,
-             backLeftSteerVelocity,
-             backLeftSteerAppliedVolts,
-             backLeftSteerSupplyCurrent,
-             backLeftSteerTorqueCurrent,
-             backLeftSteerTempCelsius,
-        
-             backRightSteerPosition,
-             backRightSteerVelocity,
-             backRightSteerAppliedVolts,
-             backRightSteerSupplyCurrent,
-             backRightSteerTorqueCurrent,
-             backRightSteerTempCelsius
-        );
+                steerPosition.get(i),
+                steerVelocity.get(i),
+                steerAppliedVolts.get(i),
+                steerSupplyCurrent.get(i),
+                steerTorqueCurrent.get(i),
+                steerTempCelsius.get(i)
+            );
+        }
     }
 
     public void setCurrentLimits() { // used for setting different current limits for auton/teleop
@@ -253,93 +148,35 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
 
     @Override
     public void updateStats(DriveIOdata stats) {
-        stats.driveConnected.put(SwervePoses.FRONT_LEFT,
-        BaseStatusSignal.refreshAll(
-        frontLeftDrivePosition,
-        frontLeftDriveVelocity,
-        frontLeftDriveAppliedVolts,
-        frontLeftDriveSupplyCurrent,
-        frontLeftDriveTorqueCurrent,
-        frontLeftDriveTempCelsius)
-        .isOK()
-        );
-        
-        stats.driveConnected.put(SwervePoses.FRONT_RIGHT,
-        BaseStatusSignal.refreshAll(
-        frontRightDrivePosition,
-        frontRightDriveVelocity,
-        frontRightDriveAppliedVolts,
-        frontRightDriveSupplyCurrent,
-        frontRightDriveTorqueCurrent,
-        frontRightDriveTempCelsius)
-        .isOK()
-        );
+        for (int i = 0; i==3; ++i) {
+            switch (i) {
+                case 0: swervePoses = SwervePoses.FRONT_LEFT;
+                case 1: swervePoses = SwervePoses.FRONT_RIGHT;
+                case 2: swervePoses = SwervePoses.BACK_LEFT;
+                case 3: swervePoses = SwervePoses.BACK_RIGHT;
+            }
+            stats.driveConnected.put(swervePoses,
+            BaseStatusSignal.refreshAll(
+            drivePosition.get(i),
+            driveVelocity.get(i),
+            driveAppliedVolts.get(i),
+            driveSupplyCurrent.get(i),
+            driveTorqueCurrent.get(i),
+            driveTempCelsius.get(i))
+            .isOK()
+            );
 
-        stats.driveConnected.put(SwervePoses.BACK_LEFT,
-        BaseStatusSignal.refreshAll(
-        backLeftDrivePosition,
-        backLeftDriveVelocity,
-        backLeftDriveAppliedVolts,
-        backLeftDriveSupplyCurrent,
-        backLeftDriveTorqueCurrent,
-        backLeftDriveTempCelsius)
-        .isOK()
-        );
-
-        stats.driveConnected.put(SwervePoses.BACK_RIGHT,
-        BaseStatusSignal.refreshAll(
-        backRightDrivePosition,
-        backRightDriveVelocity,
-        backRightDriveAppliedVolts,
-        backRightDriveSupplyCurrent,
-        backRightDriveTorqueCurrent,
-        backRightDriveTempCelsius)
-        .isOK()
-        );
-
-        stats.steerConnected.put(SwervePoses.FRONT_LEFT,
-        BaseStatusSignal.refreshAll(
-        frontLeftSteerPosition,
-        frontLeftSteerVelocity,
-        frontLeftSteerAppliedVolts,
-        frontLeftSteerSupplyCurrent,
-        frontLeftSteerTorqueCurrent,
-        frontLeftSteerTempCelsius)
-        .isOK()
-        );
-
-        stats.steerConnected.put(SwervePoses.FRONT_RIGHT,
-        BaseStatusSignal.refreshAll(
-        frontRightSteerPosition,
-        frontRightSteerVelocity,
-        frontRightSteerAppliedVolts,
-        frontRightSteerSupplyCurrent,
-        frontRightSteerTorqueCurrent,
-        frontRightSteerTempCelsius)
-        .isOK()
-        );
-
-        stats.steerConnected.put(SwervePoses.BACK_LEFT,
-        BaseStatusSignal.refreshAll(
-        backLeftSteerPosition,
-        backLeftSteerVelocity,
-        backLeftSteerAppliedVolts,
-        backLeftSteerSupplyCurrent,
-        backLeftSteerTorqueCurrent,
-        backLeftSteerTempCelsius)
-        .isOK()
-        );
-
-        stats.steerConnected.put(SwervePoses.BACK_RIGHT,
-        BaseStatusSignal.refreshAll(
-        backRightSteerPosition,
-        backRightSteerVelocity,
-        backRightSteerAppliedVolts,
-        backRightSteerSupplyCurrent,
-        backRightSteerTorqueCurrent,
-        backRightSteerTempCelsius)
-        .isOK()
-        );
+            stats.steerConnected.put(swervePoses,
+            BaseStatusSignal.refreshAll(
+            steerPosition.get(i),
+            steerVelocity.get(i),
+            steerAppliedVolts.get(i),
+            steerSupplyCurrent.get(i),
+            steerTorqueCurrent.get(i),
+            steerTempCelsius.get(i))
+            .isOK()
+            );
+        }
 
         this.iOdata.driveConnected.forEach((key, connected) -> {
             if(connected) {
