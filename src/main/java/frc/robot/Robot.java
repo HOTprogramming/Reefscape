@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
   private GenericEntry voltsEntry;
   private GenericEntry ampsEntry;
   private GenericEntry controlMode; 
-
+ 
   private String modeColor;
 
 
@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
     voltsEntry = tab.add("Volts",0.0).getEntry();
     ampsEntry = tab.add("Amps",0.0).getEntry();
-    controlMode = tab.add("Control mode", "hi").getEntry();
+    controlMode = tab.add("Control mode", "uh oh").getEntry();
   }
 
   @Override

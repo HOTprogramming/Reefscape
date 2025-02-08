@@ -39,7 +39,7 @@ public class RobotContainer {
   enum Mode {
     coral,
     algae,
-    climb
+    climb,
   }
 
   public Mode mode;
