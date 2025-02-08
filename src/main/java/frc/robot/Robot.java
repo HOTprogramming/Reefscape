@@ -25,6 +25,8 @@ public class Robot extends TimedRobot {
   private GenericEntry ampsEntry;
   private GenericEntry controlMode; 
 
+  private String modeColor;
+
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -44,7 +46,19 @@ public class Robot extends TimedRobot {
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
     voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
     ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
-    controlMode.setString(m_robotContainer.mode.toString());
+
+    switch (m_robotContainer.mode.toString()) {
+      case "coral":
+      modeColor = "#0000FF";
+      break;
+      case "algae":
+      modeColor = "#008000";
+      break;
+      case "climb":
+      modeColor = "#FF0000";
+      break;
+    }
+    controlMode.setString(modeColor);
   
   }
 
