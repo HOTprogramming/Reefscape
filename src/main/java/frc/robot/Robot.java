@@ -52,10 +52,10 @@ public class Robot extends TimedRobot {
       modeColor = "#0000FF";
       break;
       case "algae":
-      modeColor = "#008000";
+      modeColor = "#2CC983";
       break;
       case "climb":
-      modeColor = "#FF0000";
+      modeColor = "#EE0000";
       break;
     }
     controlMode.setString(modeColor);
