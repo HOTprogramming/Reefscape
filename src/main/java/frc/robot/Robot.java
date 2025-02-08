@@ -23,6 +23,8 @@ public class Robot extends TimedRobot {
   private GenericEntry matchTimeEntry;
   private GenericEntry voltsEntry;
   private GenericEntry ampsEntry;
+  private GenericEntry controlMode; 
+
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -31,15 +33,19 @@ public class Robot extends TimedRobot {
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
     voltsEntry = tab.add("Volts",0.0).getEntry();
     ampsEntry = tab.add("Amps",0.0).getEntry();
+    controlMode = tab.add("Control mode", "hi").getEntry();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
+
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
     voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
     ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
+    controlMode.setString(m_robotContainer.mode.toString());
+  
   }
 
   @Override

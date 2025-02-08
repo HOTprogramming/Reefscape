@@ -36,13 +36,13 @@ public class RobotContainer {
   private Camera cameraSubsystem;
   private Manager gamespecManager;
 
-  private enum Mode {
+  enum Mode {
     coral,
     algae,
     climb
   }
 
-  private Mode mode;
+  public Mode mode;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -136,11 +136,11 @@ public class RobotContainer {
 
       driver.start().onTrue(drivetrain.resetPidgeon());
 
-      operator.leftBumper().onTrue(gamespecManager.runOnce(() -> mode = Mode.coral));
-      operator.rightBumper().onTrue(gamespecManager.runOnce(() -> mode = Mode.algae));
+      operator.leftBumper().onTrue(gamespecManager.runOnce(() -> this.mode = Mode.coral));
+      operator.rightBumper().onTrue(gamespecManager.runOnce(() -> this.mode = Mode.algae));
 
-      operator.start().onTrue(gamespecManager.runOnce(() -> mode = Mode.climb));
-      operator.back().onTrue(gamespecManager.runOnce(() -> mode = Mode.climb));
+      operator.start().onTrue(gamespecManager.runOnce(() -> this.mode = Mode.climb));
+      operator.back().onTrue(gamespecManager.runOnce(() -> this.mode = Mode.climb));
 
       operator.a().and(this::isCoral).onTrue(NamedCommands.getCommand("L2"));
       operator.b().and(this::isCoral).onTrue(NamedCommands.getCommand("L3"));
