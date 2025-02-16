@@ -87,8 +87,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("open fingers", gamespecManager.OpenFingers());
     NamedCommands.registerCommand("cancel shoot", gamespecManager.cancelShoot());
     NamedCommands.registerCommand("done scoring", gamespecManager.doneScoring());
+
     NamedCommands.registerCommand("Align Reef Left", Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), drivetrain.run(() -> drivetrain.alignReef()).until(() -> !drivetrain.notAtTarget()), Commands.print("humphrey")));
     NamedCommands.registerCommand("Align Reef Right", Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(-1)), drivetrain.run(() -> drivetrain.alignReef()).onlyWhile(drivetrain::notAtTarget), Commands.print("humphrey")));
+    NamedCommands.registerCommand("climb", gamespecManager.climberOut());
 
 
     mode = Mode.coral;
