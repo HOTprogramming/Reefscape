@@ -68,6 +68,7 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("goods", "REDR4Place&Pickup");
+    chooser.addOption("reef", "align reef testing");
     // chooser.addOption("Complex Auto", "m_complexAuto");
     
     NamedCommands.registerCommand("L1", gamespecManager.goToL1());
@@ -86,6 +87,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("open fingers", gamespecManager.OpenFingers());
     NamedCommands.registerCommand("cancel shoot", gamespecManager.cancelShoot());
     NamedCommands.registerCommand("done scoring", gamespecManager.doneScoring());
+    NamedCommands.registerCommand("Align Reef Left", Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), drivetrain.run(() -> drivetrain.alignReef()).onlyWhile(() -> drivetrain.notAtTarget())));
+    NamedCommands.registerCommand("Align Reef Right", Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), drivetrain.run(() -> drivetrain.alignReef()).onlyWhile(() -> drivetrain.notAtTarget())));
 
 
     mode = Mode.coral;
