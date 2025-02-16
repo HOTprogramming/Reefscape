@@ -180,10 +180,13 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean notAtTarget() {
+        if (currentTarget != null) {
         return Math.abs(
                 this.iOdata.state.Pose.getTranslation().getDistance(
-                    reefTarget.getTranslation())) 
+                    currentTarget.getTranslation())) 
                     > 0.05;
+        }
+        return false;
     }
 
     public Command generateOnTheFly() {
@@ -384,6 +387,8 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        SmartDashboard.putBoolean("not at target", notAtTarget());
 
         if (!(DriverStation.isTeleopEnabled()) || Math.abs(iOdata.pigeon.getX()) > 0.2 || Math.abs(iOdata.pigeon.getY()) > 0.2) {
             heading = iOdata.state.Pose.getRotation();
