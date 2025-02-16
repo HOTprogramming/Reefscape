@@ -15,6 +15,12 @@
           "data": {
             "name": "Align Reef Right"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "align reef 2"
+          }
         }
       ]
     }
