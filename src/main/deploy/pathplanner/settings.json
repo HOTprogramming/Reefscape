@@ -3,20 +3,14 @@
   "robotLength": 0.88,
   "holonomicMode": true,
   "pathFolders": [
-    "Blue1",
+    "BlueL3",
     "BlueR3",
-    "Copy of Slow (blue side)",
-    "First",
-    "FloorPickupRotation",
-    "LRed4",
-    "Red1",
-    "RedCoral4Left",
-    "Second",
-    "Slow",
-    "Third"
+    "Init",
+    "RedL3",
+    "RedR3"
   ],
   "autoFolders": [
-    "Tests"
+    "Autos"
   ],
   "defaultMaxVel": 4.96,
   "defaultMaxAccel": 6.0,
