@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 15.814499999999999,
-        "y": 0.9975450819672115
+        "y": 0.9975450819672116
       },
       "nextControl": null,
       "isLocked": false,
@@ -72,7 +72,7 @@
     "rotation": -145.0
   },
   "reversed": false,
-  "folder": "RedL3",
+  "folder": "Third",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 150.0

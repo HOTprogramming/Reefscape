@@ -263,6 +263,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Autos",
+  "folder": "Tests",
   "choreoAuto": false
 }
