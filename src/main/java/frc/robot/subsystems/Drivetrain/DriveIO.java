@@ -28,19 +28,13 @@ public interface DriveIO {
 
         public Rotation3d pigeon;
 
-        public double frontLeftDrivePositionRads = 0.0;
-        public double frontLeftDriveVelocityRpm = 0.0;
-        public double frontLeftDriveAppliedVolts = 0.0;
-        public double frontLeftDriveSupplyCurrentAmps = 0.0;
-        public double frontLeftDriveTorqueCurrentAmps = 0.0;
-        public double frontLeftDriveTempCelsius = 0.0;
-    
-        public double frontRightDrivePositionRads = 0.0;
-        public double frontRightDriveVelocityRpm = 0.0;
-        public double frontRightDriveAppliedVolts = 0.0;
-        public double frontRightDriveSupplyCurrentAmps = 0.0;
-        public double frontRightDriveTorqueCurrentAmps = 0.0;
-        public double frontRightDriveTempCelsius = 0.0;
+        Map<SwervePoses, Boolean> driveConnected = new EnumMap<>(SwervePoses.class);
+        Map<SwervePoses, Double> drivePosition = new EnumMap<>(SwervePoses.class);
+        Map<SwervePoses, Double> driveVelocity = new EnumMap<>(SwervePoses.class);
+        Map<SwervePoses, Double> driveVolts = new EnumMap<>(SwervePoses.class);
+        Map<SwervePoses, Double> driveSupplyCurrent = new EnumMap<>(SwervePoses.class);
+        Map<SwervePoses, Double> driveTorqueCurrent = new EnumMap<>(SwervePoses.class);
+        Map<SwervePoses, Double> driveTemp = new EnumMap<>(SwervePoses.class);
 
         Map<SwervePoses, Boolean> steerConnected = new EnumMap<>(SwervePoses.class);
         Map<SwervePoses, Double> steerPosition = new EnumMap<>(SwervePoses.class);
