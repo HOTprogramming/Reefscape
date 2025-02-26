@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.GameSpec.Elevator;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -55,7 +57,7 @@ public class Elevator extends SubsystemBase {
 
   private void UpdateTelemetry() {
     elevatorVelocity.setDouble(stats.elevatorVelocity);
-    elevatorPosition.setDouble(stats.elevatorPosition);
+    elevatorPosition.setDouble(io.elevator.getPosition().getValueAsDouble());
     elevatorSupplyCurrent.setDouble(stats.SupplyCurrentAmps);
     elevatorStatorCurrent.setDouble(stats.TorqueCurrentAmps);
     elevatorTemp.setDouble(stats.TempCelsius);
@@ -73,37 +75,96 @@ public class Elevator extends SubsystemBase {
       () -> this.elevatorCommandedPos.setDouble(position),
       () -> io.setElevatorMotorControl(position),
       interrupted -> io.setElevatorMotorControl(position), 
-      () -> checkRange(.1),
+      () -> checkRange(1.0),
       this);
   }
 
   public Command goToL4(){
-    return elevatorCommand(ElevatorConstants.l4Height);
+    return elevatorCommand(ElevatorConstants.L4Height);
+  }
+
+  public Command goToL4Long(){
+    return elevatorCommand(ElevatorConstants.L4LongHeight);
   }
 
   public Command goToL3(){
-    return elevatorCommand(ElevatorConstants.l3Height);
+    return elevatorCommand(ElevatorConstants.L3Height);
+    // return elevatorCommand(30.0);
   }
 
   public Command goToL2(){
-    return elevatorCommand(ElevatorConstants.l2Height);
+    return elevatorCommand(ElevatorConstants.L2Height);
   }
 
   public Command goToL1(){
-    return elevatorCommand(ElevatorConstants.l1Height);
+    return elevatorCommand(ElevatorConstants.L1Height);
   }
 
-  public Command goToNet(){
-    return elevatorCommand(ElevatorConstants.netHeight);
+  public Command L4Score(){
+    return elevatorCommand(ElevatorConstants.L4ScoreHeight);
   }
 
-  public Command goToIntakeCoral(){
-    return elevatorCommand(ElevatorConstants.intakeCoralHeight);
+  public Command L3Score(){
+    return elevatorCommand(ElevatorConstants.L3ScoreHeight);
   }
 
-  public Command goToIntakeAlgae(){
-    return elevatorCommand(ElevatorConstants.intakeAlgaeHeight);
+  public Command L2Score(){
+    return elevatorCommand(ElevatorConstants.L2ScoreHeight);
   }
+
+  public Command goToFeeder(){
+    return elevatorCommand(ElevatorConstants.FeederHeight);
+  }
+
+  public Command goToPackage(){
+    return elevatorCommand(ElevatorConstants.PackageHeight);
+  }
+
+  public Command goToFloorIntake(){
+    return elevatorCommand(ElevatorConstants.FloorIntakeHeight);
+  }
+
+  public Command goToFloorIntakeGrab(){
+    return elevatorCommand(ElevatorConstants.FloorIntakeGrabHeight);
+  }
+
+  public Command goToProcessor(){
+    return elevatorCommand(ElevatorConstants.ProcessorHeight);
+  }
+
+  public Command L4MiniScore(){
+    return elevatorCommand(ElevatorConstants.L4MiniScoreHeight);
+  }
+
+  public Command goToHighAlgae(){
+    return elevatorCommand(ElevatorConstants.highAlgae);
+  }
+
+  public Command goToLowAlgae(){
+    return elevatorCommand(ElevatorConstants.lowAlgae);
+  }
+
+  public Command goToHP(){
+    return elevatorCommand(ElevatorConstants.HPHeight);
+  }
+
+  public Command goToBarge(){
+    return elevatorCommand(ElevatorConstants.BargeHeight);
+  }
+
+  public Command climbDown(){
+    return elevatorCommand(ElevatorConstants.climbHeight);
+  }
+
+  public boolean elevatorClimbHeight(){
+    if(stats.elevatorPosition < ElevatorConstants.L1Height - 1.0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  
 
   public Command managerElevatorTest(){
     System.out.println("elevatorworks");
@@ -125,6 +186,17 @@ public class Elevator extends SubsystemBase {
   public boolean checkRange(double deadband){
     return (stats.elevatorPosition >= elevatorCommandedPos.getDouble(0) - deadband) && 
            (stats.elevatorPosition <= elevatorCommandedPos.getDouble(0) + deadband);
+  }
+
+  public boolean elevatorGreaterThan(double desiredPos, double threshHold){
+    if(stats.elevatorPosition > desiredPos - Math.abs(threshHold)){
+      System.out.println(true);
+      return true;
+    }
+    else{
+      System.out.println(false);
+      return false;
+    }
   }
 
   @Override

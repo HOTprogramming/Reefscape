@@ -3,13 +3,22 @@ package frc.robot.subsystems.GameSpec.Arm;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -20,7 +29,8 @@ public abstract class ArmIO {
 
     // Protected TalonFX object accessible to subclasses
     protected TalonFX arm;
-    protected MotionMagicVoltage armMagic;
+    protected PositionTorqueCurrentFOC armControl;
+    protected CANcoder armCancoder;
 
     public static class ArmIOStats {
         public boolean armMotorConnected = true;
@@ -31,6 +41,8 @@ public abstract class ArmIO {
         public double SupplyCurrentAmps = 0.0;
         public double TorqueCurrentAmps = 0.0;
         public double TempCelsius = 0.0;
+        public double armCancoderPosition = 0.0;
+        public double armCancoderVelocity = 0.0;
     }
 
     protected static ArmIOStats stats = new ArmIOStats();
@@ -40,13 +52,20 @@ public abstract class ArmIO {
     private final StatusSignal<Current> SupplyCurrent;
     private final StatusSignal<Current> TorqueCurrent;
     private final StatusSignal<Temperature> TempCelsius;
+    private final StatusSignal<Angle> armCancoderPosition;
+    private final StatusSignal<AngularVelocity> armCancoderVelocity;
+
+    public TalonFXConfiguration cfg;
+    public CANcoderConfiguration encoderCfg;
 
     /** Constructor to initialize the TalonFX */
     public ArmIO() {
-        this.arm = new TalonFX(ArmConstants.armMotorID, "CamBot");
+        this.arm = new TalonFX(ArmConstants.armMotorID, "robot");
+        this.armCancoder = new CANcoder(ArmConstants.armEncoderID, "robot");
 
-        armMagic = new MotionMagicVoltage(0);
-        TalonFXConfiguration cfg = new TalonFXConfiguration();
+        armControl = new PositionTorqueCurrentFOC(0);
+        cfg = new TalonFXConfiguration();
+        encoderCfg = new CANcoderConfiguration();
 
         MotionMagicConfigs mm = cfg.MotionMagic;
         mm.MotionMagicCruiseVelocity = ArmConstants.armGains.CruiseVelocity(); //rps
@@ -60,28 +79,40 @@ public abstract class ArmIO {
         slot0.kV = ArmConstants.armGains.kV();
         slot0.kS = ArmConstants.armGains.kS();
 
-        FeedbackConfigs fdb = cfg.Feedback;
-        fdb.SensorToMechanismRatio = 1;
-
-        cfg.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        cfg.Feedback.FeedbackRemoteSensorID = armCancoder.getDeviceID();
+        cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        cfg.Feedback.SensorToMechanismRatio = 1/360.0;//changes what the cancoder and fx encoder ratio is
+        cfg.Feedback.RotorToSensorRatio = 1; //12.8;
+        cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.0;
         cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
         cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 1.0;
+        cfg.withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(80)
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimit(90)
+                .withSupplyCurrentLimitEnable(true)
+        ).withTorqueCurrent(
+            new TorqueCurrentConfigs()
+                .withPeakForwardTorqueCurrent(65)
+                .withPeakReverseTorqueCurrent(-65)
+        );
+        cfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        StatusCode armStatus = StatusCode.StatusCodeNotInitialized;
-        for(int i = 0; i < 5; ++i) {
-            armStatus = arm.getConfigurator().apply(cfg);
-        if (armStatus.isOK()) break;}
-        if (!armStatus.isOK()) {
-            System.out.println("Could not configure device. Error: " + armStatus.toString());
-        }
+        encoderCfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        encoderCfg.MagnetSensor.MagnetOffset = ArmConstants.armEncoderOffset;
+
+        setConfig();
 
         armPosition = arm.getPosition();
         armVelocity = arm.getVelocity();
         SupplyCurrent = arm.getSupplyCurrent();
         TorqueCurrent = arm.getTorqueCurrent();
         TempCelsius = arm.getDeviceTemp();
+        armCancoderPosition = armCancoder.getPosition();
+        armCancoderVelocity = armCancoder.getVelocity();
     
         BaseStatusSignal.setUpdateFrequencyForAll(
             100.0,
@@ -89,7 +120,9 @@ public abstract class ArmIO {
             armVelocity,
             SupplyCurrent,
             TorqueCurrent,
-            TempCelsius
+            TempCelsius,
+            armCancoderPosition,
+            armCancoderVelocity
           );
     }
 
@@ -101,7 +134,9 @@ public abstract class ArmIO {
           armVelocity,
           SupplyCurrent,
           TorqueCurrent,
-          TempCelsius)
+          TempCelsius,
+          armCancoderPosition,
+          armCancoderVelocity)
             .isOK();
 
         stats.armPosition = armPosition.getValueAsDouble();
@@ -109,12 +144,33 @@ public abstract class ArmIO {
         stats.SupplyCurrentAmps = SupplyCurrent.getValueAsDouble();
         stats.TorqueCurrentAmps = TorqueCurrent.getValueAsDouble();
         stats.TempCelsius = TempCelsius.getValueAsDouble();
+        stats.armCancoderPosition = armCancoderPosition.getValueAsDouble();
+        stats.armCancoderVelocity = armCancoderVelocity.getValueAsDouble();
     }
 
 
+    public void setConfig(){
+        StatusCode armStatus = StatusCode.StatusCodeNotInitialized;
+        for(int i = 0; i < 5; ++i) {
+            armStatus = arm.getConfigurator().apply(cfg);
+        if (armStatus.isOK()) break;}
+        if (!armStatus.isOK()) {
+            System.out.println("Could not configure device. Error: " + armStatus.toString());
+        }
+
+        StatusCode encoderStatus = StatusCode.StatusCodeNotInitialized;
+        for(int i = 0; i < 5; ++i) {
+            encoderStatus = armCancoder.getConfigurator().apply(encoderCfg);
+        if (encoderStatus.isOK()) break;}
+        if (!encoderStatus.isOK()) {
+            System.out.println("Could not configure device. Error: " + encoderStatus.toString());
+        }
+
+    }
+
     /** Apply motion magic control mode */
     public void setArmMotorControl(double commandedPosition) {
-        arm.setControl(armMagic.withPosition(commandedPosition).withSlot(0));
+        arm.setControl(armControl.withPosition(commandedPosition).withSlot(0));
     }
 
     /** Stop motor */

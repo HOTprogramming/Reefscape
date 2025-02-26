@@ -14,19 +14,6 @@ import frc.robot.subsystems.GameSpec.Arm.ArmIO.ArmIOStats;
 
 public class Arm extends SubsystemBase {
   //arm range 150 to -150
-  private static final double Package = Math.toRadians(0);
-
-  private static final double coral_Feader_Intake = Math.toRadians(50);
-  private static final double coral_Floor_Intake = Math.toRadians(20);
-  private static final double coral_Level1 = Math.toRadians(25);
-  private static final double coral_Level2 = Math.toRadians(35);
-  private static final double coral_Level3 = Math.toRadians(40);
-  private static final double coral_Level4 = Math.toRadians(-100);
-  
-  private static final double algae_Place = Math.toRadians(40);
-  private static final double algae_Intake_Level2 = Math.toRadians(180);
-  private static final double algea_Intake_Level3 = Math.toRadians(-180);
-
   public FunctionalCommand testCommand;
   private final ArmIO io;
   public final ArmIOStats stats;
@@ -39,7 +26,7 @@ public class Arm extends SubsystemBase {
   private GenericEntry armSupplyCurrent;
   private GenericEntry armStatorCurrent;
   private GenericEntry armTemp;
-  private GenericEntry armCommandedPos;
+  public GenericEntry armCommandedPos;
   
   public Arm(ArmIO io) {
     this.io = io; 
@@ -65,7 +52,7 @@ public class Arm extends SubsystemBase {
 
   private void UpdateTelemetry() {
     armVelocity.setDouble(stats.armVelocity);
-    armPosition.setDouble(stats.armPosition);
+    armPosition.setDouble(io.arm.getPosition().getValueAsDouble());
     armSupplyCurrent.setDouble(stats.SupplyCurrentAmps);
     armStatorCurrent.setDouble(stats.TorqueCurrentAmps);
     armTemp.setDouble(stats.TempCelsius);
@@ -76,44 +63,76 @@ public class Arm extends SubsystemBase {
       () -> this.armCommandedPos.setDouble(position),
       () -> io.setArmMotorControl(position),
       interrupted -> io.setArmMotorControl(position), 
-      () -> checkRange(.1),
+      () -> checkRange(5),
       this);
   }
-//
+
   public Command goToPackage(){
-    return armCommand(Package);
-  }
-  public Command goToCFeederIntake(){
-    return armCommand(coral_Feader_Intake);
-  }
-  public Command goToCFloorIntake(){
-    return armCommand(coral_Floor_Intake);
-  }
-  public Command goToCL4(){
-    return armCommand(coral_Level4);
-  }
-  public Command goToCL3(){
-    return armCommand(coral_Level3);
-  }
-  public Command goToCL2(){
-    return armCommand(coral_Level2);
-  }
-  public Command goToCL1(){
-    return armCommand(coral_Level1);
-  }
-  public Command goToAIntakeL2(){
-    return armCommand(algae_Intake_Level2);
-  }
-  public Command goToAIntakeL3(){
-    return armCommand(algea_Intake_Level3);
-  }
-  public Command goToAPlace(){
-    return armCommand(algae_Place);
+    return armCommand(ArmConstants.PackageAngle);
   }
 
-  public Command managerArmTest(){
-    System.out.println("armworks");
-    return runOnce(() -> {});
+  public Command goToL1(){
+    return armCommand(ArmConstants.L1Angle);
+  }
+  
+  public Command goToL2(){
+    return armCommand(ArmConstants.L2Angle);
+  }
+
+  public Command goToL3(){
+    return armCommand(ArmConstants.L3Angle);
+  }
+
+  public Command goToL3Short(){
+    return armCommand(ArmConstants.L3short);
+  }
+  
+  public Command goToL4Short(){
+    return armCommand(ArmConstants.L4Short);
+  }
+
+  public Command goToL2Short(){
+    return armCommand(ArmConstants.L2Short);
+  }
+
+  public Command goToL4(){
+    return armCommand(ArmConstants.L4Angle);
+  }
+
+  public Command L4Score(){
+    return armCommand(ArmConstants.L4Score);
+  }
+
+  public Command L3Score(){
+    return armCommand(ArmConstants.L3Score);
+  }
+
+  public Command L2Score(){
+    return armCommand(ArmConstants.L2Score);
+  }
+
+  public Command goToFeeder(){
+    return armCommand(ArmConstants.FeederAngle);
+  }
+
+  public Command horizontal(){
+    return armCommand(ArmConstants.Horizontal);
+  }
+
+  public Command barge(){
+    return armCommand(ArmConstants.Barge);
+  }
+
+  public Command getAlgaeFromReef(){
+    return armCommand(ArmConstants.GetAlgaeFromReef);
+  }
+
+  public Command processor(){
+    return armCommand(ArmConstants.Processor);
+  }
+
+  public Command intakeAlgae(){
+    return armCommand(ArmConstants.IntakeAlgae);
   }
 
   public boolean checkRange(double deadband){
@@ -121,7 +140,7 @@ public class Arm extends SubsystemBase {
            (stats.armPosition <= armCommandedPos.getDouble(0) + deadband);
   }
 
-  public boolean armPosition(double desiredPos, double threshHold){
+  public boolean armGreaterThan(double desiredPos, double threshHold){
     if(stats.armPosition > desiredPos - Math.abs(threshHold)){
       System.out.println(true);
       return true;
@@ -130,6 +149,26 @@ public class Arm extends SubsystemBase {
       System.out.println(false);
       return false;
     }
+  }
+
+  /**
+   * 
+   * @param tripCurrent
+   * @return false if bad
+   */
+  public boolean armCurrent(double tripCurrent){
+    return !(stats.SupplyCurrentAmps > tripCurrent);
+
+  }
+
+  public boolean armLessThan(double desiredPos, double threshHold){
+    if(stats.armPosition < desiredPos - Math.abs(threshHold)){
+      return true;
+    }
+    else{
+      return false;
+    }
+
   }
 
   public Command runToPosition(double position){

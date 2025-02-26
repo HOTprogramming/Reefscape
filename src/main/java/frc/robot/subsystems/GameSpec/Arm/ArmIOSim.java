@@ -1,5 +1,9 @@
 package frc.robot.subsystems.GameSpec.Arm;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
@@ -20,13 +24,21 @@ import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class ArmIOSim extends ArmIO {
   public TalonFXSimState armSimState;
+  public CANcoderSimState encoderSimState;
 
   public final SingleJointedArmSim armSim;
 
   public MechanismLigament2d m_arm;
 
   public ArmIOSim(){
+    encoderCfg.MagnetSensor.MagnetOffset = 0;
+    cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    encoderCfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+
+    setConfig();
+
     armSimState = arm.getSimState();
+    encoderSimState = armCancoder.getSimState();
 
     armSim = new SingleJointedArmSim(
         ArmConstants.simGearBox,
@@ -64,10 +76,10 @@ public class ArmIOSim extends ArmIO {
       RoboRioSim.setVInVoltage(
           BatterySim.calculateDefaultBatteryLoadedVoltage(armSim.getCurrentDrawAmps()));
 
-      armSimState.setRawRotorPosition(armSim.getAngleRads());
-      armSimState.setRotorVelocity(armSim.getVelocityRadPerSec());
+      encoderSimState.setRawPosition(armSim.getAngleRads()/6.28319);
+      // encoderSimState.setVelocity(armSim.getVelocityRadPerSec());
 
       // Update the Mechanism Arm angle based on the simulated arm angle
-      m_arm.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+      m_arm.setAngle(arm.getPosition().getValueAsDouble());
     }
 }
