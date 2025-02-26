@@ -31,6 +31,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -192,25 +193,12 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
                 this.iOdata.driveTorqueCurrent.put(key, getModule(key.ordinal()).getDriveMotor().getTorqueCurrent().getValueAsDouble());
                 this.iOdata.driveTemp.put(key, getModule(key.ordinal()).getDriveMotor().getDeviceTemp().getValueAsDouble());
 
-                SmartDashboard.putNumber(key.toString() + " Velo", this.iOdata.driveVelocity.get(key));
-                SmartDashboard.putNumber(key.toString() + " Volts", this.iOdata.driveVolts.get(key));
-                SmartDashboard.putNumber(key.toString() + " Supply", this.iOdata.driveSupplyCurrent.get(key));
-                SmartDashboard.putNumber(key.toString() + " Torque", this.iOdata.driveTorqueCurrent.get(key));
-                SmartDashboard.putNumber(key.toString() + " Temp", this.iOdata.driveTemp.get(key));
-
                 this.iOdata.steerPosition.put(key, getModule(key.ordinal()).getSteerMotor().getPosition().getValueAsDouble());
                 this.iOdata.steerVelocity.put(key, getModule(key.ordinal()).getSteerMotor().getVelocity().getValueAsDouble());
                 this.iOdata.steerVolts.put(key, getModule(key.ordinal()).getSteerMotor().getMotorVoltage().getValueAsDouble());
                 this.iOdata.steerSupplyCurrent.put(key, getModule(key.ordinal()).getSteerMotor().getSupplyCurrent().getValueAsDouble());
                 this.iOdata.steerTorqueCurrent.put(key, getModule(key.ordinal()).getSteerMotor().getTorqueCurrent().getValueAsDouble());
                 this.iOdata.steerTemp.put(key, getModule(key.ordinal()).getSteerMotor().getDeviceTemp().getValueAsDouble());
-
-                SmartDashboard.putNumber(key.toString() + " Position", this.iOdata.steerPosition.get(key));
-                SmartDashboard.putNumber(key.toString() + " Velo", this.iOdata.steerVelocity.get(key));
-                SmartDashboard.putNumber(key.toString() + " Volts", this.iOdata.steerVolts.get(key));
-                SmartDashboard.putNumber(key.toString() + " Supply", this.iOdata.steerSupplyCurrent.get(key));
-                SmartDashboard.putNumber(key.toString() + " Torque", this.iOdata.steerTorqueCurrent.get(key));
-                SmartDashboard.putNumber(key.toString() + " Temp", this.iOdata.steerTemp.get(key));
             }
         });
     }

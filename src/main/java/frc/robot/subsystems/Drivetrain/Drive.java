@@ -29,13 +29,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Drivetrain.DriveIO.DriveIOdata;
+import frc.robot.subsystems.Drivetrain.DriveIO.SwervePoses;
 
 import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -66,6 +69,23 @@ public class Drive extends SubsystemBase {
     private DriveIOdata iOdata;
 
     private ShuffleboardTab driveTab;
+    private ShuffleboardTab driveMotorsTab;
+
+    private Map<SwervePoses, GenericEntry> drivePositionEntries = new EnumMap<>(SwervePoses.class);      
+    private Map<SwervePoses, GenericEntry> driveVelocityEntries = new EnumMap<>(SwervePoses.class);      
+    private Map<SwervePoses, GenericEntry> driveVoltsEntries = new EnumMap<>(SwervePoses.class);         
+    private Map<SwervePoses, GenericEntry> driveSupplyCurrentEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> driveTorqueCurrentEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> driveTempEntries = new EnumMap<>(SwervePoses.class);      
+    
+    private Map<SwervePoses, GenericEntry> steerPositionEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> steerVelocityEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> steerVoltsEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> steerSupplyCurrentEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> steerTorqueCurrentEntries = new EnumMap<>(SwervePoses.class);
+    private Map<SwervePoses, GenericEntry> steerTempEntries = new EnumMap<>(SwervePoses.class);
+
+
     private GenericEntry speedEntry;
     private GenericEntry poseEntry;
     private GenericEntry pathXEntry;
@@ -80,7 +100,6 @@ public class Drive extends SubsystemBase {
     public Pose3d tagTransform;
     public boolean seesReefTag;
     public int reefTagID;
-
 
     private PathPlannerPath path;
     private Pose2d reefTarget;
@@ -128,8 +147,26 @@ public class Drive extends SubsystemBase {
         heading = Rotation2d.fromDegrees(0);
 
         driveTab = Shuffleboard.getTab("Drive");
+        driveMotorsTab = Shuffleboard.getTab("Drive Motors");
+        driveVelocityEntries.forEach((key, v) -> {
+            driveVelocityEntries.put(key, driveMotorsTab.add(key.toString() + " Velocity", 0.0).getEntry());
+            driveVoltsEntries.put(key, driveMotorsTab.add(key.toString() + " Volts", 0.0).getEntry());
+            driveSupplyCurrentEntries.put(key, driveMotorsTab.add(key.toString() + " Supply Current", 0.0).getEntry());
+            driveTorqueCurrentEntries.put(key, driveMotorsTab.add(key.toString() + " Torque Current", 0.0).getEntry());
+            driveTempEntries.put(key, driveMotorsTab.add(key.toString() + " Temp", 0.0).getEntry());
+            
+            steerPositionEntries.put(key, driveMotorsTab.add(key.toString() + " Position", 0.0).getEntry());
+            steerVelocityEntries.put(key, driveMotorsTab.add(key.toString() + " Velocity", 0.0).getEntry());
+            steerVoltsEntries.put(key, driveMotorsTab.add(key.toString() + " Volts", 0.0).getEntry());
+            steerSupplyCurrentEntries.put(key, driveMotorsTab.add(key.toString() + " Supply Current", 0.0).getEntry());
+            steerTorqueCurrentEntries.put(key, driveMotorsTab.add(key.toString() + " Torque Current", 0.0).getEntry());
+            steerTempEntries.put(key, driveMotorsTab.add(key.toString() + " Temp", 0.0).getEntry());
+        }
+        );
+
         speedEntry = driveTab.add("Speed", 0.0).getEntry();
         poseEntry = driveTab.add("Pose", new Double[] {0.0, 0.0, 0.0}).getEntry();
+
         pathXEntry = driveTab.add("Path X", 0.0).getEntry();
         pathYEntry = driveTab.add("Path Y", 0.0).getEntry();
         pathRotEntry = driveTab.add("Path Rot", 0.0).getEntry();
@@ -492,15 +529,9 @@ public class Drive extends SubsystemBase {
 
         try{
             SmartDashboard.putNumber("Drive tag x", tagTransform.getX());
-            SmartDashboard.putNumber("Drive  tag y", tagTransform.getY());
+            SmartDashboard.putNumber("Drive tag y", tagTransform.getY());
             // SmartDashboard.putNumber("Drive  tag Rot", tagTransform.getRotation());
-
-    
-            // SmartDashboard.putNumber("tag x", tagTransform.getX());
-            // SmartDashboard.putNumber("tag y", tagTransform.getY());
-        } catch(Exception e){
-
-        }
+        } catch(Exception e){}
 
 
         if (!(DriverStation.isTeleopEnabled()) || Math.abs(iOdata.pigeon.getX()) > 0.2 || Math.abs(iOdata.pigeon.getY()) > 0.2) {
@@ -536,6 +567,21 @@ public class Drive extends SubsystemBase {
         }
 
         alert.set(true);
+
+        driveVelocityEntries.forEach((key, v) -> {
+            driveVelocityEntries.get(key).setDouble(iOdata.driveVelocity.get(key));
+            driveVoltsEntries.get(key).setDouble(iOdata.driveVolts.get(key));
+            driveSupplyCurrentEntries.get(key).setDouble(iOdata.driveSupplyCurrent.get(key));
+            driveTorqueCurrentEntries.get(key).setDouble(iOdata.driveTorqueCurrent.get(key));
+            driveTempEntries.get(key).setDouble(iOdata.driveTemp.get(key));
+            
+            steerPositionEntries.get(key).setDouble(iOdata.steerPosition.get(key));
+            steerVelocityEntries.get(key).setDouble(iOdata.steerVelocity.get(key));
+            steerVoltsEntries.get(key).setDouble(iOdata.steerVolts.get(key));
+            steerSupplyCurrentEntries.get(key).setDouble(iOdata.steerSupplyCurrent.get(key));
+            steerTorqueCurrentEntries.get(key).setDouble(iOdata.steerTorqueCurrent.get(key));
+            steerTempEntries.get(key).setDouble(iOdata.steerTemp.get(key));        
+        });
     }
 
     public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
