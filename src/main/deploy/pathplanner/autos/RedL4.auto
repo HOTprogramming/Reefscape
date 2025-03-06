@@ -7,11 +7,11 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Place"
+            "pathName": "CoralP1"
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -23,19 +23,45 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L3"
+                  "name": "AL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auton Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CoralP2"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Auton Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Package"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.4
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Auton Intake Start"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -48,7 +74,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1 Pickup"
+                  "pathName": "CoralP3"
                 }
               },
               {
@@ -58,19 +84,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Package"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.2
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "align station intake"
+                        "name": "Auton Finish Intake"
                       }
                     }
                   ]
@@ -80,13 +94,7 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "2 Place"
-          }
-        },
-        {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -98,19 +106,45 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L3"
+                  "name": "AL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auton Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CoralP4"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Auton Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Package"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Auton Intake Start"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -123,7 +157,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Pickup"
+                  "pathName": "CoralP5"
                 }
               },
               {
@@ -133,19 +167,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Package"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.2
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "align station intake"
+                        "name": "Auton Finish Intake"
                       }
                     }
                   ]
@@ -155,13 +177,7 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "3 Place"
-          }
-        },
-        {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -173,19 +189,45 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L3"
+                  "name": "AL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auton Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CoralP6"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Auton Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Package"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Auton Intake Start"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -198,7 +240,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3 Pickup"
+                  "pathName": "CoralP7"
                 }
               },
               {
@@ -208,19 +250,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Package"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.2
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "align station intake"
+                        "name": "Auton Finish Intake"
                       }
                     }
                   ]
@@ -230,13 +260,7 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "4 Place"
-          }
-        },
-        {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -248,28 +272,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Auton Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Package"
+                  "name": "AL4"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auton Shoot"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Red Autos",
   "choreoAuto": false
 }
