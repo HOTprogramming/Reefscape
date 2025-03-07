@@ -35,6 +35,7 @@ import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.GameSpec.Manager;
 import frc.robot.subsystems.GameSpec.Climber.Climber;
 import frc.robot.subsystems.Lights.Lights;
+import frc.robot.subsystems.Lights.Lights.AnimationTypes;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 
@@ -47,6 +48,7 @@ public class RobotContainer {
   private Drive drivetrain;
   private Camera cameraSubsystem;
   private Manager gamespecManager;
+  private Lights lightsSubsystem;
 
   private enum Mode {
     coral,
@@ -60,6 +62,8 @@ public class RobotContainer {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  private final CommandXboxController lights = new CommandXboxController(2);
+
 
   public RobotContainer() {
     RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
@@ -67,6 +71,7 @@ public class RobotContainer {
     if(!Utils.isSimulation()){
         drivetrain = new Drive(new DriveKraken());
         cameraSubsystem = new Camera(drivetrain);
+        lightsSubsystem = new Lights();
     } else {
       drivetrain = new Drive(new DriveSim());
     }
@@ -131,6 +136,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Auton Finish Intake", gamespecManager.autonFinishIntake());
     NamedCommands.registerCommand("AL4", gamespecManager.autonL4());
 
+    NamedCommands.registerCommand("Auton Lights", lightsSubsystem.blink(AnimationTypes.Rainbow, 1, 0.2));
+    new EventTrigger("Auton Lights").onTrue(NamedCommands.getCommand("Auton Lights"));
 
     //new EventTrigger("Package").whileTrue(gamespecManager.goToPackage());
 
@@ -147,6 +154,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {    
+
+    lights.povLeft().onTrue(NamedCommands.getCommand("Auton Lights"));
 
     // drivetrain.setDefaultCommand
     //   (drivetrain.run(() -> {
