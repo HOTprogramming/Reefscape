@@ -257,9 +257,9 @@ public class Drive extends SubsystemBase {
         );
     }
 
-    public Command backUp() {
+    public Command backUp(int leftRight) {
         return Commands.sequence(runOnce(() -> startPose = iOdata.state.Pose), 
-        run(() -> driveIO.setSwerveRequest(ROBOT_CENTRIC.withVelocityY(1))) //translationControllerY.calculate(startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()), Units.inchesToMeters(6)))))
+        run(() -> driveIO.setSwerveRequest(ROBOT_CENTRIC.withVelocityY(1 * leftRight))) //translationControllerY.calculate(startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()), Units.inchesToMeters(6)))))
         .onlyWhile(() -> startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()) < Units.inchesToMeters(6)));
     }
 
