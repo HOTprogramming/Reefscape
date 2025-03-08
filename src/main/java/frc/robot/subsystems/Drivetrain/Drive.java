@@ -13,6 +13,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -86,6 +87,8 @@ public class Drive extends SubsystemBase {
     private Pose2d reefTarget;
     private Pose2d objectAbsolute;
     private Pose2d objectRelative;
+
+    public Pose2d startPose;
 
     private Alert alert;
 
@@ -252,6 +255,12 @@ public class Drive extends SubsystemBase {
             .withVelocityY(translationControllerY.calculate(iOdata.state.Pose.getY(), objectAbsolute.getY()))
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getDegrees(), objectAbsolute.getRotation().getDegrees()))
         );
+    }
+
+    public Command backUp() {
+        return Commands.sequence(runOnce(() -> startPose = iOdata.state.Pose), 
+        run(() -> driveIO.setSwerveRequest(ROBOT_CENTRIC.withVelocityY(1))) //translationControllerY.calculate(startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()), Units.inchesToMeters(6)))))
+        .onlyWhile(() -> startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()) < Units.inchesToMeters(6)));
     }
 
     public void alignReef(int leftRight) {
