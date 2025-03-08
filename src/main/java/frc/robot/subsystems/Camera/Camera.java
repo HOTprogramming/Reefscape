@@ -56,6 +56,7 @@ import javax.xml.crypto.Data;
 import frc.robot.Robot;
 import frc.robot.subsystems.Camera.CameraConstants.CameraConstant;
 import frc.robot.subsystems.Drivetrain.Drive;
+import frc.robot.subsystems.Lights.Lights;
 public class Camera extends SubsystemBase {
 
     public enum CameraPositions {
@@ -163,6 +164,7 @@ public class Camera extends SubsystemBase {
 
     // docs https://docs.photonvision.org/ 
     private Drive drivetrain;
+    private Lights lights;
 
     private boolean ignoring = false;
 
@@ -284,6 +286,11 @@ public class Camera extends SubsystemBase {
         cameraMeasurements.forEach((key,measurement) -> {
             if (measurement.isPresent()) {
                 cameraStdDeviations.put(key,getEstimationStdDevs(measurement.get().estimatedPose.toPose2d(), cameras.get(key), constants.cameraConstants.get(key), photonPoseEstimators.get(key),allowMultiTag == key));
+                if (key == CameraPositions.LEFT) {lights.leftSeesTag = true;}
+                if (key == CameraPositions.RIGHT) {lights.rightSeesTag = true;}
+            } else {
+                if (key == CameraPositions.LEFT) {lights.leftSeesTag = false;}
+                if (key == CameraPositions.RIGHT) {lights.rightSeesTag = false;}
             }
         });
 

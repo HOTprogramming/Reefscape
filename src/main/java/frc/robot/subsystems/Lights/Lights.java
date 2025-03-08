@@ -21,6 +21,10 @@ public class Lights extends SubsystemBase {
     int start = 0;
     int count = 30;
 
+    public boolean leftSeesTag = false;
+    public boolean rightSeesTag = false;
+
+
     int repeats;
 
     private final int LedCount = 17;
@@ -138,24 +142,17 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
-      //   if(m_toAnimate == null) {
-      //       rightCANdle.setLEDs((int)(joystick.getLeftTriggerAxis() * 255), 
-      //                         (int)(joystick.getRightTriggerAxis() * 255), 
-      //                         (int)(joystick.getLeftX() * 255));
-      //   } else {
-      //       rightCANdle.animate(m_toAnimate);
-      //   }
-      //   rightCANdle.modulateVBatOutput(joystick.getRightY());
+       if (leftSeesTag) {
+        leftCANdle.setLEDs(0, 255, 0, 0, 8, 10);
+       } else {
+        leftCANdle.setLEDs(225, 150, 0, 0, 8, 10);
+       } 
 
-      //   if(m_toAnimate == null) {
-      //     leftCANdle.setLEDs((int)(joystick.getLeftTriggerAxis() * 255), 
-      //                       (int)(joystick.getRightTriggerAxis() * 255), 
-      //                       (int)(joystick.getLeftX() * 255));
-      // } else {
-      //     leftCANdle.animate(m_toAnimate);
-      // }
-      // leftCANdle.modulateVBatOutput(joystick.getRightY());
+       if (rightSeesTag) {
+        rightCANdle.setLEDs(0, 255, 0, 0, 8, 10);
+       } else {
+        rightCANdle.setLEDs(225, 150, 0, 0, 8, 10);
+       }  
     }
 
     @Override
@@ -202,38 +199,6 @@ public class Lights extends SubsystemBase {
     });
    }  
    }
-
-
-//idk how to make blink
-
-  
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
