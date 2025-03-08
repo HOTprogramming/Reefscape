@@ -286,11 +286,11 @@ public class Camera extends SubsystemBase {
         cameraMeasurements.forEach((key,measurement) -> {
             if (measurement.isPresent()) {
                 cameraStdDeviations.put(key,getEstimationStdDevs(measurement.get().estimatedPose.toPose2d(), cameras.get(key), constants.cameraConstants.get(key), photonPoseEstimators.get(key),allowMultiTag == key));
-                if (key == CameraPositions.LEFT) {lights.leftSeesTag = true;}
-                if (key == CameraPositions.RIGHT) {lights.rightSeesTag = true;}
+                if (key == CameraPositions.LEFT) {lights.leftCameraLights(0, 255, 0);}
+                if (key == CameraPositions.RIGHT) {lights.rightCameraLights(0, 255, 0);}
             } else {
-                if (key == CameraPositions.LEFT) {lights.leftSeesTag = false;}
-                if (key == CameraPositions.RIGHT) {lights.rightSeesTag = false;}
+                if (key == CameraPositions.LEFT) {lights.leftCameraLights(150, 225, 0);}
+                if (key == CameraPositions.RIGHT) {lights.rightCameraLights(150, 225, 0);}
             }
         });
 

@@ -21,10 +21,6 @@ public class Lights extends SubsystemBase {
     int start = 0;
     int count = 30;
 
-    public boolean leftSeesTag = false;
-    public boolean rightSeesTag = false;
-
-
     int repeats;
 
     private final int LedCount = 17;
@@ -41,6 +37,7 @@ public class Lights extends SubsystemBase {
         Strobe,
         Twinkle,
         TwinkleOff,
+        AutoAlign,
         SetAll
     }
     private AnimationTypes m_currentAnimation;
@@ -121,6 +118,8 @@ public class Lights extends SubsystemBase {
             case TwinkleOff:
                 m_toAnimate = new TwinkleOffAnimation(70, 90, 175, 0, 0.8, LedCount, TwinkleOffPercent.Percent100);
                 break;
+            case AutoAlign:
+                m_toAnimate = new StrobeAnimation(0, 255, 0, 0, 5, LedCount);
             case SetAll:
                 m_toAnimate = null;
                 break;
@@ -142,17 +141,19 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic() {
-       if (leftSeesTag) {
-        leftCANdle.setLEDs(0, 255, 0, 0, 8, 10);
-       } else {
-        leftCANdle.setLEDs(225, 150, 0, 0, 8, 10);
-       } 
 
-       if (rightSeesTag) {
-        rightCANdle.setLEDs(0, 255, 0, 0, 8, 10);
-       } else {
-        rightCANdle.setLEDs(225, 150, 0, 0, 8, 10);
-       }  
+    }
+
+    public void leftCameraLights(int r, int g, int b) {
+      leftCANdle.setLEDs(r, g, b, 0, 8, 10);
+    }
+
+    public void rightCameraLights(int r, int g, int b) {
+      rightCANdle.setLEDs(r, g, b, 0, 8, 10);
+    }
+
+    public void autoAlignLights() {
+      changeAnimation(AnimationTypes.AutoAlign);
     }
 
     @Override
