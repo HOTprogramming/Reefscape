@@ -58,7 +58,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Lights",
+      "waypointRelativePos": 0.902093180283592,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Auton Lights"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.96,
     "maxAcceleration": 6.0,
