@@ -76,10 +76,15 @@ public class RobotContainer {
     chooser.setDefaultOption("Auto", "Auto");
     
     chooser.addOption("RedR3", "RedR3"); 
+    chooser.addOption("RedR4", "RedR4");
     chooser.addOption("RedL3", "RedL3");
+    chooser.addOption("RedL4", "RedL4");
+    chooser.addOption("RedR4Floor", "RedR4Floor");
+
     chooser.addOption("BlueR3", "BlueR3");
+    chooser.addOption("BlueR4", "BlueR4");
     chooser.addOption("BlueL3", "BlueL3");
-    chooser.addOption(" Copy of BlueL3", "Copy of BlueL3");
+    chooser.addOption("BlueL4", "BlueL4");
 
      
 
@@ -242,6 +247,7 @@ public class RobotContainer {
       operator.b().and(this::isCoral).onTrue(NamedCommands.getCommand("L3")).onFalse(Commands.parallel(NamedCommands.getCommand("Package"), NamedCommands.getCommand("done scoring")));
       operator.x().and(this::isCoral).onTrue(NamedCommands.getCommand("L1")).onFalse(Commands.parallel(NamedCommands.getCommand("Package"), NamedCommands.getCommand("done scoring")));
       operator.y().and(this::isCoral).onTrue(NamedCommands.getCommand("L4")).onFalse(Commands.parallel(NamedCommands.getCommand("Package"), NamedCommands.getCommand("done scoring")));
+      operator.leftTrigger().and(this::isCoral).whileTrue(NamedCommands.getCommand("align floor intake")); 
       operator.rightTrigger().and(this::isCoral).whileTrue(NamedCommands.getCommand("align station intake")).onFalse(Commands.parallel(NamedCommands.getCommand("Package"))); //, NamedCommands.getCommand("Stop Intake")));
 
       operator.a().and(this::isAlgae).onTrue(NamedCommands.getCommand("low algae")).onFalse(Commands.parallel(NamedCommands.getCommand("Algae Package")));
@@ -266,7 +272,7 @@ public class RobotContainer {
       operator.leftTrigger().or(operator.rightTrigger()).onFalse(NamedCommands.getCommand("Coral Zero"));
       System.out.println("c");
 
-       NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
+      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
       NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
 
       new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
