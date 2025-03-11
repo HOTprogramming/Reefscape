@@ -152,8 +152,8 @@ public class Lights extends SubsystemBase {
       rightCANdle.setLEDs(r, g, b, 0, 8, 10);
     }
 
-    public void autoAlignLights() {
-      changeAnimation(AnimationTypes.AutoAlign);
+    public Command autoAlignLights() {
+      return runOnce(() -> changeAnimation(AnimationTypes.AutoAlign));
     }
 
     @Override

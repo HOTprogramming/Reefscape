@@ -198,6 +198,10 @@ public class Drive extends SubsystemBase {
         return false;
     }
 
+    public boolean autoAlignAtTarget() {
+        return currentTarget.getTranslation().getDistance(iOdata.state.Pose.getTranslation()) < 0.02;
+    }
+
     private boolean seesReefTag() {
         return seesReefTag;
     }

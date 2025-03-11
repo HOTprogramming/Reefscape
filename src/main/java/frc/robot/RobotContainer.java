@@ -130,9 +130,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Lights Auto Good", gamespecManager.setLightsGood());
 
 
-    NamedCommands.registerCommand("Align Reef Left",  drivetrain.autonAlignReefCommand(0));
-    NamedCommands.registerCommand("Align Reef Center",  drivetrain.autonAlignReefCommand(1));
-    NamedCommands.registerCommand("Align Reef Right",  drivetrain.autonAlignReefCommand(2));
+    NamedCommands.registerCommand("Align Reef Left",  Commands.parallel(drivetrain.autonAlignReefCommand(0), lightsSubsystem.autoAlignLights().onlyWhile(() -> drivetrain.autoAlignAtTarget())));
+    NamedCommands.registerCommand("Align Reef Center",  Commands.parallel(drivetrain.autonAlignReefCommand(1), lightsSubsystem.autoAlignLights().onlyWhile(() -> drivetrain.autoAlignAtTarget())));
+    NamedCommands.registerCommand("Align Reef Right",  Commands.parallel(drivetrain.autonAlignReefCommand(2), lightsSubsystem.autoAlignLights().onlyWhile(() -> drivetrain.autoAlignAtTarget())));
 
     NamedCommands.registerCommand("Auton Shoot",  gamespecManager.autonShoot());
     NamedCommands.registerCommand("Auton Intake Start", gamespecManager.autonIntake());
