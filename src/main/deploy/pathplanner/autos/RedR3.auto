@@ -234,6 +234,7 @@
           }
         },
         {
+<<<<<<< HEAD
           "type": "parallel",
           "data": {
             "commands": [
@@ -257,6 +258,11 @@
                 }
               }
             ]
+=======
+          "type": "path",
+          "data": {
+            "pathName": "Place 4"
+>>>>>>> main
           }
         }
       ]
