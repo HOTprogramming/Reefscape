@@ -26,7 +26,6 @@ public abstract class ClimberIO {
     // Protected TalonFX object accessible to subclasses
     protected Servo climberServo;
     protected Servo climberServo2;
-    protected Servo ratchetServo;
     protected TalonFX climber;
     protected TalonFX climber2;
     protected MotionMagicVoltage climberMagic;
@@ -79,7 +78,6 @@ public abstract class ClimberIO {
         this.climber2 = new TalonFX(ClimberConstants.climberMotor2ID, "robot");
         this.climberServo = new Servo(ClimberConstants.ServoPort);
         this.climberServo2 = new Servo(ClimberConstants.ServoPort2);
-        this.ratchetServo = new Servo(ClimberConstants.ServoPort3);
         climberMagic = new MotionMagicVoltage(0);
         TalonFXConfiguration cfg = new TalonFXConfiguration();
 
@@ -103,9 +101,6 @@ public abstract class ClimberIO {
         cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.0;
         cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
         cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 1.0;
-
-        cfg.CurrentLimits.StatorCurrentLimitEnable = false;
-        cfg.CurrentLimits.SupplyCurrentLimitEnable = false;
         
         StatusCode climberStatus = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {

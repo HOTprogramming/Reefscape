@@ -92,7 +92,6 @@ public class Lights implements Subsystem {
     
    }//red
    
-
    
    public Command setYellow(){
     return runOnce(()-> {
@@ -101,7 +100,6 @@ public class Lights implements Subsystem {
     });
    
    }//yellow
-
    public Command setYellow2(){
     return runOnce(()-> {rightCANdle.setLEDs(225, 150, 0, 0, start2, count); });
    
@@ -146,7 +144,7 @@ public class Lights implements Subsystem {
         return runOnce(()-> {rightCANdle.setLEDs(0, 0, 225, 0, start2, count); });
         //blue    
     }
-  public Command setBlue3(){ 
+public Command setBlue3(){ 
     return runOnce(()-> {rightCANdle.setLEDs(0, 0, 225, 0, start3, count); });
             //blue
    }
@@ -165,8 +163,7 @@ public class Lights implements Subsystem {
     //off?
    }
    public Command setPurple(){
-    return runOnce(()-> {rightCANdle.setLEDs(170, 0, 255, 0, start, count);
-      leftCANdle.setLEDs(170, 0, 255, 0, start, count); });
+    return runOnce(()-> {rightCANdle.setLEDs(170, 0, 255, 0, start, count); });
     //purple
    }
    public Command setPurple2(){
@@ -356,5 +353,53 @@ public class Lights implements Subsystem {
    }
 
 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
    }
+
+
+//idk how to make blink
+
+  
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -63,7 +63,12 @@
       "name": "Lights",
       "waypointRelativePos": 0.902093180283592,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Auton Lights"
+        }
+      }
     }
   ],
   "globalConstraints": {

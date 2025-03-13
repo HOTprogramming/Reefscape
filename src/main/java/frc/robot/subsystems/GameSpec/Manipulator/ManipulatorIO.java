@@ -260,7 +260,6 @@ public abstract class ManipulatorIO {
                 System.out.println("Could not configure device. Error: " + CoralStatus2.toString());
             }
     
-            
             StatusCode CoralEncoder = StatusCode.StatusCodeNotInitialized;
             for(int i = 0; i < 5; ++i) {
                 CoralEncoder = coralCancoder.getConfigurator().apply(eCfg);
