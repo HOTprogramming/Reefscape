@@ -69,6 +69,8 @@ public class RobotContainer {
         cameraSubsystem = new Camera(drivetrain);
     } else {
       drivetrain = new Drive(new DriveSim());
+      cameraSubsystem = new Camera(drivetrain);
+
     }
 
     gamespecManager = new Manager();
@@ -101,7 +103,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", gamespecManager.shoot());
     NamedCommands.registerCommand("lock fingers", gamespecManager.lockFingers()); 
     NamedCommands.registerCommand("open fingers", gamespecManager.OpenFingers());
-    NamedCommands.registerCommand("cancel shoot", gamespecManager.cancelShoot());
     NamedCommands.registerCommand("done scoring", gamespecManager.doneScoring());
     NamedCommands.registerCommand("climb", gamespecManager.climberOut());
     NamedCommands.registerCommand("high algae", gamespecManager.highAlgae());
@@ -109,16 +110,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("align floor intake", gamespecManager.alignFloorIntake());
     NamedCommands.registerCommand("align processor", gamespecManager.alignProcessor());
     NamedCommands.registerCommand("barge", gamespecManager.barge());
-    NamedCommands.registerCommand("intake", gamespecManager.algaeIntake());
+    NamedCommands.registerCommand("pluck intake", gamespecManager.algaeIntake());
     NamedCommands.registerCommand("stop intake", gamespecManager.algaeStopIntake());
     NamedCommands.registerCommand("L2 Package", gamespecManager.goToL2Package());
     NamedCommands.registerCommand("Floor Intake Package", gamespecManager.floorIntakePackage());
     NamedCommands.registerCommand("Algae Package", gamespecManager.algaePackage());
-    NamedCommands.registerCommand("Climber Package", gamespecManager.packageClimber());
+    NamedCommands.registerCommand("Barge Package", gamespecManager.bargePackage());
 
     NamedCommands.registerCommand("Lights Coral", gamespecManager.setLightsCoral());
     NamedCommands.registerCommand("Lights Algae", gamespecManager.setLightsAlgae());
     NamedCommands.registerCommand("Lights Climb", gamespecManager.setLightsClimb());
+    NamedCommands.registerCommand("Lights Shoot", gamespecManager.setLightsShoot());
 
 
     NamedCommands.registerCommand("Lights Auto Bad", gamespecManager.setLightsBad());
@@ -127,7 +129,8 @@ public class RobotContainer {
 
 
     NamedCommands.registerCommand("Align Reef Left",  drivetrain.autonAlignReefCommand(0));
-    NamedCommands.registerCommand("Align Reef Right",  drivetrain.autonAlignReefCommand(1));
+    NamedCommands.registerCommand("Align Reef Center",  drivetrain.autonAlignReefCommand(1));
+    NamedCommands.registerCommand("Align Reef Right",  drivetrain.autonAlignReefCommand(2));
 
     NamedCommands.registerCommand("Auton Shoot",  gamespecManager.autonShoot());
     NamedCommands.registerCommand("Auton Intake Start", gamespecManager.autonIntake());
@@ -214,9 +217,9 @@ public class RobotContainer {
         }
       ));
       // b right y middle x left
-      driver.rightBumper().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTargetWBall(2)), cameraSubsystem.setIgnore()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefFieldcentric()))).onFalse(cameraSubsystem.setUnIgnore());
-      driver.y().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTargetWBall(1)), cameraSubsystem.setIgnore()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefFieldcentric()))).onFalse(cameraSubsystem.setUnIgnore());
-      driver.leftBumper().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTargetWBall(0)), cameraSubsystem.setIgnore()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefFieldcentric()))).onFalse(cameraSubsystem.setUnIgnore());
+      driver.rightBumper().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTarget(2)), cameraSubsystem.setIgnore(), gamespecManager.setLightsAlign()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefRobotcentric()))).onFalse(cameraSubsystem.setUnIgnore()).onFalse(refreshLights());
+      driver.y().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), cameraSubsystem.setIgnore(), gamespecManager.setLightsAlign()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefRobotcentric()))).onFalse(cameraSubsystem.setUnIgnore()).onFalse(refreshLights());
+      driver.leftBumper().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), cameraSubsystem.setIgnore(), gamespecManager.setLightsAlign()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefRobotcentric()))).onFalse(cameraSubsystem.setUnIgnore()).onFalse(refreshLights());
 
       // driver.b().whileTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), drivetrain.run(() -> drivetrain.alignReefFieldcentric())));      
       // driver.x().whileTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), drivetrain.run(() -> drivetrain.alignReefFieldcentric())));      
@@ -225,9 +228,7 @@ public class RobotContainer {
       // driver.b().whileTrue(NamedCommands.getCommand("Align Reef Left"));
       // driver.x().whileTrue(NamedCommands.getCommand("Align Reef Right"));
       // driver.b().onTrue(NamedCommands.getCommand("expel"));
-      driver.rightTrigger().onTrue(NamedCommands.getCommand("shoot")
-      .onlyIf(operator.b().or(operator.a()).or(operator.x()).or(operator.y())))
-      .onFalse(NamedCommands.getCommand("cancel shoot")
+      driver.rightTrigger().onTrue(Commands.parallel(NamedCommands.getCommand("shoot"), gamespecManager.setLightsShoot())
       .onlyIf(operator.b().or(operator.a()).or(operator.x()).or(operator.y())));
       // driver.leftTrigger().onTrue(NamedCommands.getCommand("Intake"));
 
@@ -254,21 +255,29 @@ public class RobotContainer {
       operator.b().and(this::isAlgae).onTrue(NamedCommands.getCommand("high algae")).onFalse(Commands.parallel(NamedCommands.getCommand("Algae Package")));
       operator.x().and(this::isAlgae).onTrue(NamedCommands.getCommand("align processor")).onFalse(Commands.parallel(NamedCommands.getCommand("Package")));
       operator.y().and(this::isAlgae).onTrue(NamedCommands.getCommand("barge")).onFalse(Commands.parallel(NamedCommands.getCommand("Package")));
-      operator.leftTrigger().and(this::isAlgae).whileTrue(NamedCommands.getCommand("align floor intake")).onFalse(NamedCommands.getCommand("Floor Intake Package"));
-      operator.rightTrigger().and(this::isAlgae).whileTrue(NamedCommands.getCommand("intake")).onFalse(NamedCommands.getCommand("stop intake"));
+      //operator.leftTrigger().and(this::isAlgae).whileTrue(NamedCommands.getCommand("align floor intake")).onFalse(NamedCommands.getCommand("Floor Intake Package"));
+      operator.rightTrigger().and(this::isAlgae).whileTrue(NamedCommands.getCommand("pluck intake")).onFalse(NamedCommands.getCommand("stop intake"));
 
       operator.a().and(this::isClimb).onTrue(NamedCommands.getCommand("climb"));      
       operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
       operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
+      operator.b().and(this::isClimb).onTrue(gamespecManager.latchServo());
+
       //operator.b().and(this::isClimb).onTrue(NamedCommands.getCommand("Climber Package"));
 
+      operator.povUp().or(operator.povLeft().or(operator.povDown().or(operator.povRight()))).onTrue(NamedCommands.getCommand("Package").unless(this::isClimb));
+
       operator.axisLessThan(5, -0.05).or(operator.axisGreaterThan(5, 0.05)).and(this::isClimb).whileTrue(
+      Commands.sequence(
         gamespecManager.climberSubsystem.run(
-          () -> gamespecManager.climberSubsystem.setPower(-operator.getRightY())
-        )
-      ).onFalse(gamespecManager.climberSubsystem.run(
+        () -> gamespecManager.climberSubsystem.setPower(-operator.getRightY())
+      ).onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
+      ,gamespecManager.climberSubsystem.run(
         () -> gamespecManager.climberSubsystem.setPower(0.0)
-      ));
+      ).onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())))
+      .whileFalse(gamespecManager.climberSubsystem.runOnce(
+        () -> gamespecManager.climberSubsystem.setPower(0.0)));
+
       operator.leftTrigger().or(operator.rightTrigger()).onFalse(NamedCommands.getCommand("Coral Zero"));
       System.out.println("c");
 
@@ -287,6 +296,14 @@ public class RobotContainer {
   }
   public boolean isClimb() {
     return mode == Mode.climb;
+  }
+
+  public Command turnOffTopCam() {
+    return cameraSubsystem.setIgnore();
+  }
+
+  public Command turnOnTopCam() {
+    return cameraSubsystem.setUnIgnore();
   }
 
         //      operator.leftTrigger().and(operator.y())
@@ -312,20 +329,23 @@ public class RobotContainer {
     }
   }
 
+  public Command refreshLights() {
+    return gamespecManager.setLightsAlgae().onlyIf(() -> isAlgae())
+    .andThen(gamespecManager.setLightsClimb().onlyIf(() -> isClimb()))
+    .andThen(gamespecManager.setLightsCoral().onlyIf(() -> isCoral()));
+  }
+
   public void updateLights() {
     if (drivetrain.getAutoStartError() < 0.15) {
       NamedCommands.getCommand("Lights Auto Good").ignoringDisable(true).schedule();
-      System.err.println("GOOD");
     } else if (drivetrain.getAutoStartError() < 0.3) {
       NamedCommands.getCommand("Lights Auto Ok").ignoringDisable(true).schedule();
-      System.err.println("OK");
     } else {
       NamedCommands.getCommand("Lights Auto Bad").ignoringDisable(true).schedule();
-      System.err.println("BAD");
     }
   }
 
-  public void updateLeds() {
+  public void resetLeds() {
     switch (this.mode) {
       case coral:
       NamedCommands.getCommand("Lights Coral").schedule();
@@ -336,7 +356,7 @@ public class RobotContainer {
         break;
 
       case climb:
-      NamedCommands.getCommand("Lights Climb").schedule();;
+      NamedCommands.getCommand("Lights Climb").schedule();
         break;
     }
   }

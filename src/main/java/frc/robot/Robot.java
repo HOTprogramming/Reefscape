@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+
+
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
@@ -34,6 +37,12 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
+    
+
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog(), true);
+
+    
     tab = Shuffleboard.getTab("tab");
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
     voltsEntry = tab.add("Volts",0.0).getEntry();
@@ -75,6 +84,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
+    m_robotContainer.turnOnTopCam().ignoringDisable(true).schedule();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -92,8 +102,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    m_robotContainer.updateLeds();
+    
+    m_robotContainer.turnOffTopCam().ignoringDisable(true).schedule();
+    m_robotContainer.resetLeds();
   }
 
   @Override
