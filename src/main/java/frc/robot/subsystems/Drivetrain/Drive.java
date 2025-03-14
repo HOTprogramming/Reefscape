@@ -132,6 +132,7 @@ public class Drive extends SubsystemBase {
 
 
 
+
         heading = Rotation2d.fromDegrees(0);
 
         driveTab = Shuffleboard.getTab("Drive");
@@ -198,6 +199,7 @@ public class Drive extends SubsystemBase {
         return false;
     }
 
+
     public boolean autoAlignAtTarget() {
         return currentTarget.getTranslation().getDistance(iOdata.state.Pose.getTranslation()) < 0.02;
     }
@@ -208,6 +210,14 @@ public class Drive extends SubsystemBase {
 
     private Rotation2d getNearestReefAngle() {
         return Rotation2d.fromDegrees(60*Math.round(Math.toDegrees(Math.atan2(REEF_CENTER.getY() - iOdata.state.Pose.getY(), (DriverStation.getAlliance().get() == Alliance.Blue ? REEF_CENTER.getX(): REEF_CENTER.getX() + OFFSET_TO_RED) - iOdata.state.Pose.getX()))/60));
+    public boolean notAtTarget() {
+        if (currentTarget != null) {
+        return Math.abs(
+                this.iOdata.state.Pose.getTranslation().getDistance(
+                    currentTarget.getTranslation())) 
+                    > 0.05;
+        }
+        return false;
     }
 
     public Command generateOnTheFly() {
@@ -353,10 +363,7 @@ public class Drive extends SubsystemBase {
             .withRotationalRate(thetaController.calculate(
                 iOdata.state.Pose.getRotation().getRadians(), 
                 currentTarget.getRotation().getRadians() + Math.toRadians(90)
-            ))
-            );
-        }
-        
+				
         
     }
 
@@ -471,6 +478,9 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        SmartDashboard.putBoolean("not at target", notAtTarget());
+
         if (!(DriverStation.isTeleopEnabled()) || Math.abs(iOdata.pigeon.getX()) > 0.2 || Math.abs(iOdata.pigeon.getY()) > 0.2) {
             heading = iOdata.state.Pose.getRotation();
         }

@@ -81,15 +81,14 @@ public class RobotContainer {
     gamespecManager = new Manager();
 
     chooser.setDefaultOption("Auto", "Auto");
-    
+   
     chooser.addOption("RedR3", "RedR3"); 
     chooser.addOption("RedL3", "RedL3");
     chooser.addOption("BlueR3", "BlueR3");
     chooser.addOption("BlueL3", "BlueL3");
     chooser.addOption(" Copy of BlueL3", "Copy of BlueL3");
-
-     
-
+    chooser.addOption("goods", "REDR4Place&Pickup");
+    chooser.addOption("reef", "align reef testing");
     // chooser.addOption("Complex Auto", "m_complexAuto");
     
     NamedCommands.registerCommand("L1", gamespecManager.goToL1());
@@ -105,6 +104,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("open fingers", gamespecManager.OpenFingers());
     NamedCommands.registerCommand("cancel shoot", gamespecManager.cancelShoot());
     NamedCommands.registerCommand("done scoring", gamespecManager.doneScoring());
+
+    NamedCommands.registerCommand("Align Reef Left", Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), drivetrain.run(() -> drivetrain.alignReef()).until(() -> !drivetrain.notAtTarget()), Commands.print("humphrey")));
+    NamedCommands.registerCommand("Align Reef Right", Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(-1)), drivetrain.run(() -> drivetrain.alignReef()).onlyWhile(drivetrain::notAtTarget), Commands.print("humphrey")));
     NamedCommands.registerCommand("climb", gamespecManager.climberOut());
     NamedCommands.registerCommand("high algae", gamespecManager.highAlgae());
     NamedCommands.registerCommand("low algae", gamespecManager.lowAlgae());
