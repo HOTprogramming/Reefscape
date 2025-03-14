@@ -32,11 +32,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
-<<<<<<< HEAD
 import edu.wpi.first.units.Unit;
 import edu.wpi.first.units.measure.Angle;
-=======
->>>>>>> main
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -243,26 +240,23 @@ public class Drive extends SubsystemBase {
         );
     }
 
-<<<<<<< HEAD
     public Command backUp(int leftRight) {
         return Commands.sequence(runOnce(() -> startPose = iOdata.state.Pose), 
         run(() -> driveIO.setSwerveRequest(ROBOT_CENTRIC.withVelocityY(1 * leftRight))) //translationControllerY.calculate(startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()), Units.inchesToMeters(6)))))
         .onlyWhile(() -> startPose.getTranslation().getDistance(iOdata.state.Pose.getTranslation()) < Units.inchesToMeters(6)));
     }
 
-    public void alignReef(int leftRight) {
+    // public void alignReef(int leftRight) {
 
-        double leftRightFromTable = Units.inchesToMeters(DriverStation.getAlliance().get() == Alliance.Blue ? blueShift.get(reefTagID)[leftRight] : redShift.get(reefTagID)[leftRight]);
+    //     double leftRightFromTable = Units.inchesToMeters(DriverStation.getAlliance().get() == Alliance.Blue ? blueShift.get(reefTagID)[leftRight] : redShift.get(reefTagID)[leftRight]);
 
-        driveIO.setSwerveRequest(ROBOT_CENTRIC
-            .withVelocityX(-(-leftRightFromTable - tagTransform.getX()) * 5)
-            .withVelocityY((-0.44 - tagTransform.getY()) * 7.5)
-            // .withRotationalRate()
+    //     driveIO.setSwerveRequest(ROBOT_CENTRIC
+    //         .withVelocityX(-(-leftRightFromTable - tagTransform.getX()) * 5)
+    //         .withVelocityY((-0.44 - tagTransform.getY()) * 7.5)
+    //         // .withRotationalRate()
 
-        );
-    }
-=======
->>>>>>> main
+    //     );
+    // }
 
     public void updateReefTarget(int leftRight) {
         Alliance curAlliance = DriverStation.getAlliance().get();
