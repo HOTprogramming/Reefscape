@@ -86,6 +86,16 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> im
 
         if (currentState != null) {
             this.iOdata.state = this.currentState;
+
+            for (int i = 0; i < 4; i++) {
+                // SmartDashboard.putNumberArray("module " + i, 
+                //     new double[] {
+                //         getModule(i).getSteerMotor().getPosition().getValueAsDouble() % .5,
+                //         getModule(i).getSteerMotor().getClosedLoopReference().getValueAsDouble() % .5
+                //     }
+                // );
+                SmartDashboard.putNumber("Mod error " + i, getModule(i).getSteerMotor().getClosedLoopError().getValueAsDouble());
+            }
         }
 
         this.iOdata.pigeon = m_Pigeon2.getRotation3d();
