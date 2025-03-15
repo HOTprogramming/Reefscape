@@ -136,8 +136,8 @@ public class DriveConstants {
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(0.1).withKI(0).withKD(0)
-        .withKS(0).withKV(0.124);
+        .withKP(9.0).withKI(0).withKD(0.0)
+        .withKS(6).withKV(0.5);
 
     private static final Slot0Configs driveGainsVoltage = new Slot0Configs()
         .withKP(0.1).withKI(0).withKD(0)
@@ -173,23 +173,25 @@ public class DriveConstants {
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(90)
                 .withSupplyCurrentLimitEnable(true)
+                .withSupplyCurrentLowerLimit(90)
+                .withSupplyCurrentLowerTime(0.0)
         ).withTorqueCurrent(
             new TorqueCurrentConfigs()
-                .withPeakForwardTorqueCurrent(65)
-                .withPeakReverseTorqueCurrent(-65)
+                .withPeakForwardTorqueCurrent(90)
+                .withPeakReverseTorqueCurrent(-90)
         );
 
     public static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
     .withCurrentLimits(
         new CurrentLimitsConfigs()
-            .withStatorCurrentLimit(90)
+            .withStatorCurrentLimit(65)
             .withStatorCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(90)
+            .withSupplyCurrentLimit(70)
             .withSupplyCurrentLimitEnable(true)
     ).withTorqueCurrent(
         new TorqueCurrentConfigs()
-            .withPeakForwardTorqueCurrent(90)
-            .withPeakReverseTorqueCurrent(-90)
+            .withPeakForwardTorqueCurrent(65)
+            .withPeakReverseTorqueCurrent(-65)
     );
 
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
