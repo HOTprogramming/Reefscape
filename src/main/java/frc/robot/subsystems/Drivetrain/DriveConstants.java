@@ -2,15 +2,13 @@ package frc.robot.subsystems.Drivetrain;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.security.PublicKey;
-import java.util.EnumMap;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.*;
 import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 import com.pathplanner.lib.config.PIDConstants;
@@ -32,6 +30,8 @@ public class DriveConstants {
     public static final double auto_align_tolerance = 0.01;
     public static final double auto_align_command = 0.035;
 
+    public static final double distance_safe_from_reef = 1.1;
+    public static final double feild_center_line = 4.025;
 
 
     private static final PIDConstants autoPidConstantsTranslation = new PIDConstants(5, 0, 0);
@@ -96,25 +96,30 @@ public class DriveConstants {
     //                              GM GAINS
     public static final Map<Rotation2d, Double[]> redPoleShift = new HashMap<>() {
         {   //                                                  left center right
-            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -1.6, -6.5});
-            put(Rotation2d.fromDegrees(60), new Double[] {7.0, -1.6,  -7.0});
-            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -1.6, -7.0});
-            put(Rotation2d.fromDegrees(180), new Double[] {6.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(-120), new Double[] {5.5, -1.6, -5.0});
-            put(Rotation2d.fromDegrees(-60), new Double[] {5.5, -1.6, -6.5});
+            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -0.25, -6.5});
+            put(Rotation2d.fromDegrees(60), new Double[] {7.0, -0.25,  -7.0});
+            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -0.25, -7.0});
+            put(Rotation2d.fromDegrees(180), new Double[] {6.0, -0.25, -6.0});
+            put(Rotation2d.fromDegrees(-120), new Double[] {5.5, -0.25, -5.0});
+            put(Rotation2d.fromDegrees(-60), new Double[] {5.5, -0.25, -6.5});
         }
     };
 
     public static final Map<Rotation2d, Double[]> bluePoleShift = new HashMap<>() {
         {   //                                                  left center right
-            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -1.6, -8.0});
-            put(Rotation2d.fromDegrees(60), new Double[] {6.0, -1.6,  -6.0});
-            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -1.6, -7.0});
-            put(Rotation2d.fromDegrees(180), new Double[] {7.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(-120), new Double[] {8.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(-60), new Double[] {6.0, -1.6, -6.0});
+            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -0.25, -8.0});
+            put(Rotation2d.fromDegrees(60), new Double[] {6.0, -0.25,  -6.0});
+            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -0.25, -7.0});
+            put(Rotation2d.fromDegrees(180), new Double[] {7.0, -0.25, -6.0});
+            put(Rotation2d.fromDegrees(-120), new Double[] {8.0, -0.25, -6.0});
+            put(Rotation2d.fromDegrees(-60), new Double[] {6.0, -0.25, -6.0});
         }
     };
+
+    public static final Pose2d BLUE_REEF = new Pose2d(4.483, 4.025, Rotation2d.fromDegrees(0));
+    public static final Pose2d RED_REEF = new Pose2d(13.066, 4.025, Rotation2d.fromDegrees(0));
+
+
 
     public static final double OFFSET_TO_RED = 8.583;
     public static final Pose2d REEF_CENTER = new Pose2d(4.483, 4.025, Rotation2d.fromDegrees(0));
@@ -177,14 +182,16 @@ public class DriveConstants {
     public static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
     .withCurrentLimits(
         new CurrentLimitsConfigs()
-            .withStatorCurrentLimit(50)
+            .withStatorCurrentLimit(60)
             .withStatorCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(40)
+            .withSupplyCurrentLimit(60)
             .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLowerLimit(60)
+            .withSupplyCurrentLowerTime(0.0)
     ).withTorqueCurrent(
         new TorqueCurrentConfigs()
-            .withPeakForwardTorqueCurrent(50)
-            .withPeakReverseTorqueCurrent(-50)
+            .withPeakForwardTorqueCurrent(60)
+            .withPeakReverseTorqueCurrent(-60)
     );
 
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
