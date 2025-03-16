@@ -219,10 +219,6 @@ public class RobotContainer {
       driver.leftBumper().and(() -> drivetrain.getAutoAlignGood()).whileTrue(gamespecManager.setLightsAlignGood());
       // driver.b().whileTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), drivetrain.run(() -> drivetrain.alignReefFieldcentric())));      
       // driver.x().whileTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), drivetrain.run(() -> drivetrain.alignReefFieldcentric())));      
-    
-      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.RIGHT)).onTrue(gamespecManager.setOneLights(0, true)).onFalse(gamespecManager.setOneLights(0, false).ignoringDisable(true));
-      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.LEFT)).onTrue(gamespecManager.setOneLights(3, true)).onFalse(gamespecManager.setOneLights(3, false).ignoringDisable(true));
-      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.TOP)).onTrue(gamespecManager.setOneLights(5, true)).onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
 
 
       // driver.b().whileTrue(NamedCommands.getCommand("Align Reef Left"));
@@ -331,9 +327,21 @@ public class RobotContainer {
     .andThen(gamespecManager.setLightsCoral().onlyIf(() -> isCoral()));
   }
 
-  public Command lightsDisable() {
-    return gamespecManager.setFancyLights();
+  public Command lightsDisableInit() {
+    return Commands.sequence(gamespecManager.setFancyLights(), gamespecManager.clearBottomLights());
   }
+
+  public Command lightsDisable() {
+    return Commands.sequence(
+      gamespecManager.setOneLights(7, true).onlyIf(() -> cameraSubsystem.getCameraAlive(CameraPositions.RIGHT)).andThen(gamespecManager.setOneLights(7, false).onlyIf(() -> !cameraSubsystem.getCameraAlive(CameraPositions.RIGHT))),
+      gamespecManager.setOneLights(3, true).onlyIf(() -> cameraSubsystem.getCameraAlive(CameraPositions.LEFT)).andThen(gamespecManager.setOneLights(3, false).onlyIf(() -> !cameraSubsystem.getCameraAlive(CameraPositions.LEFT))),
+      gamespecManager.setOneLights(0, true).onlyIf(() -> cameraSubsystem.getCameraAlive(CameraPositions.TOP)).andThen(gamespecManager.setOneLights(0, false).onlyIf(() -> !cameraSubsystem.getCameraAlive(CameraPositions.TOP)))
+      );
+  }
+
+  // new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.RIGHT)).onTrue(gamespecManager.setOneLights(-1, true)).onFalse(gamespecManager.setOneLights(-1, false).ignoringDisable(true));
+  // new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.LEFT)).onTrue(gamespecManager.setOneLights(3, true)).onFalse(gamespecManager.setOneLights(3, false).ignoringDisable(true));
+  // new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.TOP)).onTrue(gamespecManager.setOneLights(5, true)).onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
 
   public void resetLeds() {
     switch (this.mode) {

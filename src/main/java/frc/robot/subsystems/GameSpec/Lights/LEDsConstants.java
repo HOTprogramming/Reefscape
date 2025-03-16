@@ -4,6 +4,12 @@ public class LEDsConstants {
     public static final int LeftStart = 0;
     public static final int RightStart = 9;
 
+    public static final int left_ID = 55;
+    public static final int right_ID = 54;
+
+    public static final int LedAnimationCount = 70;
+
+
     public static final int count = 300;
 
     public static final int LEDS_PER_ANIMATION = 30;

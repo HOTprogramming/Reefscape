@@ -250,7 +250,11 @@ public class Camera extends SubsystemBase {
     }
 
     public boolean getCameraAlive(CameraPositions camera) {
-        return cameras.get(camera).isConnected();
+        if (cameras.containsKey(camera)) {
+            return cameras.get(camera).isConnected();
+        } else {
+            return false;
+        }
     }
 
     // public boolean getCameraSeesTag(CameraPositions camera) {

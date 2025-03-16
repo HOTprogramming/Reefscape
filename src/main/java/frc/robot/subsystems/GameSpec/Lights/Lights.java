@@ -14,12 +14,10 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 public class Lights extends SubsystemBase {
-    private final CANdle leftCANdle = new CANdle(51, "rio");
-    private final CANdle rightCANdle = new CANdle(55, "rio");
+    private final CANdle leftCANdle = new CANdle(left_ID, "rio");
+    private final CANdle rightCANdle = new CANdle(right_ID, "rio");
 
     int repeats;
-
-    private final int LedCount = 17;
 
     private Animation m_toAnimate = null;
 
@@ -94,34 +92,34 @@ public class Lights extends SubsystemBase {
         switch(toChange)
         {
             case ColorFlow:
-                m_toAnimate = new ColorFlowAnimation(128, 20, 70, 0, 0.7, LedCount, Direction.Forward);
+                m_toAnimate = new ColorFlowAnimation(128, 20, 70, 0, 0.7, LedAnimationCount, Direction.Forward, RightStart);
                 break;
             case Fire:
-                m_toAnimate = new FireAnimation(0.5, 0.7, LedCount, 0.7, 0.5);
+                m_toAnimate = new FireAnimation(0.5, 0.7, LedAnimationCount, 0.7, 0.5, false, RightStart);
                 break;
             case Larson:
-                m_toAnimate = new LarsonAnimation(0, 255, 46, 0, 1, LedCount, BounceMode.Front, 3);
+                m_toAnimate = new LarsonAnimation(0, 255, 46, 0, 1, LedAnimationCount, BounceMode.Front, 3);
                 break;
             case Rainbow:
-                m_toAnimate = new RainbowAnimation(1, 5, LedCount);
+                m_toAnimate = new RainbowAnimation(1, 1, LedAnimationCount, false, RightStart);
                 break;
             case RgbFade:
-                m_toAnimate = new RgbFadeAnimation(0.7, 0.4, LedCount);
+                m_toAnimate = new RgbFadeAnimation(0.7, 0.4, LedAnimationCount);
                 break;
             case SingleFade:
-                m_toAnimate = new SingleFadeAnimation(50, 2, 200, 0, 0.5, LedCount);
+                m_toAnimate = new SingleFadeAnimation(50, 2, 200, 0, 0.5, LedAnimationCount);
                 break;
             case Strobe:
-                m_toAnimate = new StrobeAnimation(240, 10, 180, 0, 0.5, LedCount);
+                m_toAnimate = new StrobeAnimation(240, 10, 180, 0, 0.5, LedAnimationCount);
                 break;
             case Twinkle:
-                m_toAnimate = new TwinkleAnimation(30, 70, 60, 0, 0.4, LedCount, TwinklePercent.Percent6);
+                m_toAnimate = new TwinkleAnimation(30, 70, 60, 0, 0.4, LedAnimationCount, TwinklePercent.Percent6);
                 break;
             case TwinkleOff:
-                m_toAnimate = new TwinkleOffAnimation(70, 90, 175, 0, 0.8, LedCount, TwinkleOffPercent.Percent100);
+                m_toAnimate = new TwinkleOffAnimation(70, 90, 175, 0, 0.8, LedAnimationCount, TwinkleOffPercent.Percent100);
                 break;
             case AutoAlign:
-                m_toAnimate = new StrobeAnimation(0, 255, 0, 0, 5, LedCount);
+                m_toAnimate = new StrobeAnimation(0, 255, 0, 0, 5, LedAnimationCount);
             case SetAll:
                 m_toAnimate = null;
                 break;
@@ -204,12 +202,17 @@ public class Lights extends SubsystemBase {
 
    public Command setOne(int ledNum, boolean good){
     return runOnce(()-> {
-      rightCANdle.setLEDs(0, good ? 128 : 0, 128, 0, ledNum, 1);
-    
+      rightCANdle.setLEDs(good ? 0 : 128, good ? 128 : 0, 0, 0, ledNum, 1);
+      leftCANdle.setLEDs(good ? 0 : 128, good ? 128 : 0, 0, 0, ledNum, 1);    
     });
    }  
-
+   public Command setLowerBackground() {
+    return runOnce(() -> {
+      rightCANdle.setLEDs(0,0,0, 0, 0, 8);
+      leftCANdle.setLEDs(0,0,0, 0, 0, 8);
+    });
    }
+  }
 
 
 

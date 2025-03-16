@@ -458,10 +458,14 @@ public class Manager extends SubsystemBase{
     }
 
     public Command setFancyLights() {
-      return Commands.sequence(lightsSubsystem.changeAnimation(AnimationTypes.ColorFlow), lightsSubsystem.animate());
+      return Commands.sequence(lightsSubsystem.changeAnimation(AnimationTypes.Rainbow), lightsSubsystem.animate());
     }
 
     public Command setOneLights(int light, Boolean good) {
       return lightsSubsystem.setOne(light, good);
+    }
+
+    public Command clearBottomLights() {
+      return lightsSubsystem.setLowerBackground();
     }
 }
