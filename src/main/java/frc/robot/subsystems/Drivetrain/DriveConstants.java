@@ -27,6 +27,16 @@ public class DriveConstants {
 
     public static final double OTF_end_tolerance = 0.2;
 
+    public static final double auto_align_theta_disable = .1;
+    public static final double auto_align_top_speed = 2.4;
+    public static final double auto_align_tolerance = 0.01;
+    public static final double auto_align_lights_tolerance = 0.01;
+    public static final double auto_align_command = 0.035;
+
+    public static final double distance_safe_from_reef = 1.1;
+    public static final double feild_center_line = 4.025;
+
+
     private static final PIDConstants autoPidConstantsTranslation = new PIDConstants(5, 0, 0);
     private static final PIDConstants autoPidConstantsTheta = new PIDConstants (7, 0, 0); 
     private static final PIDConstants teleopPidConstantsTheta = new PIDConstants (10, 0, 0.5); 
@@ -64,23 +74,23 @@ public class DriveConstants {
     
     public static final Map<Rotation2d, Double[]> redShiftBall = new HashMap<>() {
         {   //                                                  left center right
-            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(60), new Double[] {6.0, -1.6,  -6.0});
-            put(Rotation2d.fromDegrees(120), new Double[] {6.0, -1.6, -6.5});
-            put(Rotation2d.fromDegrees(180), new Double[] {6.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(-120), new Double[] {6.0, -1.6, -6.5});
-            put(Rotation2d.fromDegrees(-60), new Double[] {6.0, -1.6, -6.5});
+            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -0.25, -6.5});
+            put(Rotation2d.fromDegrees(60), new Double[] {7.0, -0.25,  -7.0});
+            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -0.25, -7.0});
+            put(Rotation2d.fromDegrees(180), new Double[] {6.0, -0.25, -6.0});
+            put(Rotation2d.fromDegrees(-120), new Double[] {5.5, -0.25, -5.0});
+            put(Rotation2d.fromDegrees(-60), new Double[] {5.5, -0.25, -6.5});
         }
     };
 
     public static final Map<Rotation2d, Double[]> blueShiftBall = new HashMap<>() {
         {   //                                                  left center right
-            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(60), new Double[] {6.0, -1.6,  -6.0});
-            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -1.6, -7.0});
-            put(Rotation2d.fromDegrees(180), new Double[] {7.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(-120), new Double[] {8.0, -1.6, -6.0});
-            put(Rotation2d.fromDegrees(-60), new Double[] {6.0, -1.6, -6.0});
+            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -0.25, -8.0});
+            put(Rotation2d.fromDegrees(60), new Double[] {6.0, -0.25,  -6.0});
+            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -0.25, -7.0});
+            put(Rotation2d.fromDegrees(180), new Double[] {7.0, -0.25, -6.0});
+            put(Rotation2d.fromDegrees(-120), new Double[] {8.0, -0.25, -6.0});
+            put(Rotation2d.fromDegrees(-60), new Double[] {6.0, -0.25, -6.0});
         }
     };
     // put(Rotation2d.fromDegrees(0), new Double[] {6.0, 0.0, -6.0});
@@ -156,7 +166,7 @@ public class DriveConstants {
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGains = new Slot0Configs()
         .withKP(100).withKI(0).withKD(0.5)
-        .withKS(0.1).withKV(1.5).withKA(0)
+        .withKS(0.15).withKV(1.5).withKA(0)
         // .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
         ;
     // When using closed-loop control, the drive motor uses the control
@@ -173,7 +183,7 @@ public class DriveConstants {
     private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
     // The closed-loop output type to use for the drive motors;
     // This affects the PID/FF gains for the drive motors
-    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
+    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
     private static final ClosedLoopOutputType kDriveClosedLoopOutputCambot = ClosedLoopOutputType.Voltage;
 
 
@@ -199,6 +209,8 @@ public class DriveConstants {
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(90)
                 .withSupplyCurrentLimitEnable(true)
+                .withSupplyCurrentLowerLimit(40)
+                .withSupplyCurrentLowerTime(1)
         ).withTorqueCurrent(
             new TorqueCurrentConfigs()
                 .withPeakForwardTorqueCurrent(65)
@@ -208,14 +220,16 @@ public class DriveConstants {
     public static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
     .withCurrentLimits(
         new CurrentLimitsConfigs()
-            .withStatorCurrentLimit(50)
+            .withStatorCurrentLimit(70)
             .withStatorCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(40)
+            .withSupplyCurrentLimit(70)
             .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLowerLimit(50)
+            .withSupplyCurrentLowerTime(1)
     ).withTorqueCurrent(
         new TorqueCurrentConfigs()
-            .withPeakForwardTorqueCurrent(50)
-            .withPeakReverseTorqueCurrent(-50)
+            .withPeakForwardTorqueCurrent(80)
+            .withPeakReverseTorqueCurrent(-80)
     );
 
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
@@ -479,7 +493,7 @@ public class DriveConstants {
     private static final int kFrontLeftDriveMotorIdCompbot = 8;
     private static final int kFrontLeftSteerMotorIdCompbot = 7;
     private static final int kFrontLeftEncoderIdCompbot = 41;
-    private static final Angle kFrontLeftEncoderOffsetCompbot = Rotations.of(-0.254150390625);
+    private static final Angle kFrontLeftEncoderOffsetCompbot = Rotations.of(-0.267822);
     private static final boolean kFrontLeftSteerMotorInvertedCompbot = true;
     private static final boolean kFrontLeftEncoderInvertedCompbot = false;
 

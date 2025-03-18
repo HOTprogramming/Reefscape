@@ -29,8 +29,8 @@ public class ElevatorConstants {
     public static double lowAlgae;
     public static double BargeHeight;
     public static double ProcessorHeight;
-    public static double FloorIntakeHeight;
-    public static double FloorIntakeGrabHeight;
+    public static double initialClimbHeight;
+    public static double intakeCoralHeight;
 
 
     public record MMGains(double CruiseVelocity, double Acceleration, double Jerk, double kP, double kI, double kD, double kV, double kS, double kG) {} 
@@ -56,29 +56,32 @@ public class ElevatorConstants {
         elevatorEncoderID = 52;
         kReduction = (1.0 / 2.0);
         kMaxAccelerationRpmPerSec = 9000.0; 
-        elevatorGains = new MMGains(1000, 1500, 4500, 2.5 , 0, 0.0, 0.025, 0.3, 0.0);
+        elevatorGains = new MMGains(0, 0, 0.0, 0.001, 
+        20.0 , 0, 1.3, 0.0, 0.0, 8.0);
         //elevatorGains = new MMGains(0, 0, 0, 45.0 , 0, 2.25, 30.0, 1.0, 0.0);//torque position pid
-        elevatorEncoderOffset = 0.2546;
 
+        elevatorEncoderOffset = 0.2546;
         PackageHeight = 15.0; 
-        L4Height = 57.0;
-        L4LongHeight = 53.0;
-        L3Height = 25.35;
-        L2Height = 13.9;
-        L1Height = 14.79;
-        FeederHeight = 13.2;
-        L4ScoreHeight = 40.0;
-        L3ScoreHeight = 19.8;
-        L2ScoreHeight = 9.8;
+        L4Height = 56.0;
+        L4LongHeight = 52.0;
+        L3Height = 25.55;
+        L3LongHeight = 22.35;
+        L2Height = 10.6;
+        L2LongHeight = 9.73;
+        L1Height = 16.5;
+        FeederHeight = 11.1;
+        L4ReturnScoreHeight = 50.0;
+        L3ScoreHeight = 19.8;//was 19.8
+        L2ScoreHeight = 9.8; //was 9.8
         HPHeight = 17.0;
         climbHeight = 1.4;
         highAlgae = 35;
         lowAlgae = 17;
         BargeHeight = 68.75;
         ProcessorHeight = 14.0;
-        FloorIntakeHeight = 20.25;
-        FloorIntakeGrabHeight = 13.0;
+        initialClimbHeight = 12.0;
         L4MiniScoreHeight = 50.0;
+        intakeCoralHeight = 9.6;
 
     }
 
@@ -92,19 +95,26 @@ public class ElevatorConstants {
         elevatorGains = new MMGains(0, 0, 0, 45.0 , 0, 2.25, 30.0, 1.0, 0.0);//torque position pid
         elevatorEncoderOffset = 0.4953;
 
-        PackageHeight = 17.9; 
-        L4Height = 57.0;
-        L4LongHeight = 53.0;
-        L3Height = 28.35;
-        L2Height = 13.2;
-        L1Height = 18.79;
-        FeederHeight = 17.9;
-        L4ScoreHeight = 40.0;
-        L3ScoreHeight = 22.8;
-        L2ScoreHeight = 9.2;
+        PackageHeight = 15.0; 
+        L4Height = 56.0;
+        L4LongHeight = 52.0;
+        L3Height = 25.55;
+        L3LongHeight = 22.35;
+        L2Height = 10.6;
+        L2LongHeight = 9.73;
+        L1Height = 17.0;
+        FeederHeight = 12.0;
+        L4ReturnScoreHeight = 50.0;
+        L3ScoreHeight = 21.2;//was 19.8
+        L2ScoreHeight = 11.0; //was 9.8
         HPHeight = 17.0;
-        climbHeight = 1.4;
-        L4MiniScoreHeight = 40.0;
+        climbHeight = 0.25;
+        highAlgae = 35;
+        lowAlgae = 17;
+        BargeHeight = 68.75;
+        ProcessorHeight = 14.0;
+        initialClimbHeight = 20.25;
+        L4MiniScoreHeight = 50.0;
     }
 
     private static void simBotConstants(){

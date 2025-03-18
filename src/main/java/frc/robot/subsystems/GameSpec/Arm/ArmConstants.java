@@ -38,7 +38,6 @@ public class ArmConstants {
     public static double L3short;
     public static double L2Short;
     public static double L4Short;
-    public static double IntakeAlgae;
     public static double Processor;
     public static double GetAlgaeFromReef;
     public static double Barge;
@@ -75,24 +74,23 @@ public class ArmConstants {
         armGains = new MMGains(0, 0, 0, 1.0, 0.0, 0.14, 0.0, 0.0);
         simGearBox = DCMotor.getKrakenX60Foc(1);
         gravity = false;
-        armEncoderOffset = 0.08618178125;
+        armEncoderOffset = 0.8538889;
     
         PackageAngle = 0;
-        FeederAngle = 50.8;
-        L1Angle = -104.0;
-        L2Angle = -52.2;
+        FeederAngle = 46.6;
+        L1Angle = -110.0;
+        L2Angle = -33.66;
         L3Angle = -31.6;
-        L4Angle = -36;
-        L4Score = -65;
+        L4Angle = -34;
+        L4Score = -82;
         L3Score = -81.5;
         L2Score = -87.8;
         Horizontal = 90;
         Intermediate = -49.0;
-        CurrentFail = 60.0;
+        CurrentFail = 80.0;
         L3short = -20.6;
         L2Short = -20.6;
         L4Short = -22.5;
-        IntakeAlgae = -61.0;
         Processor = 35.0;
         GetAlgaeFromReef = 109;
         Barge = 128;
@@ -118,7 +116,7 @@ public class ArmConstants {
         armEncoderOffset = -0.1977;
     
         PackageAngle = 0;
-        FeederAngle = 52.4;
+        FeederAngle = 35.0;
         L1Angle = -104.0;
         L2Angle = -31.6;
         L3Angle = -31.6;
@@ -132,6 +130,9 @@ public class ArmConstants {
         L3short = -20.6;
         L2Short = -20.6;
         L4Short = -22.5;
+        Processor = 35.0;
+        GetAlgaeFromReef = 109;
+        Barge = -170;
 
     }
 
