@@ -276,7 +276,9 @@ public class Drive extends SubsystemBase {
                 double bestY = corals[bestCoral][3];
 
                 if (newY > bestY - 15) {  //close or better y
-                    if (Math.abs(newX - targetXPixel) < Math.abs(bestX - targetXPixel) + 15) {  //close or better x
+                    if (newY > bestY + 15) { 
+                        bestCoral = i;
+                    } else if (Math.abs(newX - targetXPixel) < Math.abs(bestX - targetXPixel) + 15) {  //close or better x
                         bestCoral = i;
                     }
                 }
