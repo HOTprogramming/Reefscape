@@ -13,6 +13,7 @@ public class ElevatorConstants {
     public static double elevatorEncoderOffset;
     
     public static double PackageHeight;
+    public static double AutoL4Height;
     public static double L4Height;
     public static double L4LongHeight;
     public static double L3Height;
@@ -33,6 +34,7 @@ public class ElevatorConstants {
     public static double ProcessorHeight;
     public static double initialClimbHeight;
     public static double intakeCoralHeight;
+    public static double autonHalfHeight;
 
 
     public record MMGains(double CruiseVelocity, double Acceleration, double ExpoKV, double ExpoKA, double kP, double kI, double kD, double kV, double kS, double kG) {} 
@@ -64,17 +66,18 @@ public class ElevatorConstants {
 
         elevatorEncoderOffset = 0.2546;
         PackageHeight = 15.0; 
-        L4Height = 56.0;
+        AutoL4Height = 58.0;
+        L4Height = 53.0;
         L4LongHeight = 52.0;
-        L3Height = 25.55;
-        L3LongHeight = 22.35;
-        L2Height = 10.6;
+        L3Height = 23.2;
+        L3LongHeight = 20.8;
+        L2Height = 10.4;
         L2LongHeight = 9.73;
-        L1Height = 16.5;
-        FeederHeight = 11.1;
+        L1Height = 17.5;
+        FeederHeight = 9.1;
         L4ReturnScoreHeight = 50.0;
-        L3ScoreHeight = 19.8;//was 19.8
-        L2ScoreHeight = 9.8; //was 9.8
+        L3ScoreHeight = 18.0;
+        L2ScoreHeight = 9.8; 
         HPHeight = 17.0;
         climbHeight = 0.25;
         highAlgae = 35;
@@ -84,6 +87,7 @@ public class ElevatorConstants {
         initialClimbHeight = 12.0;
         L4MiniScoreHeight = 50.0;
         intakeCoralHeight = 9.6;
+        autonHalfHeight = 25.0;
 
     }
 
@@ -101,6 +105,7 @@ public class ElevatorConstants {
         elevatorEncoderOffset = 0.4953 - .0168;
 
         PackageHeight = 15.0; 
+        AutoL4Height = 58.0;
         L4Height = 56.0;
         L4LongHeight = 52.0;
         L3Height = 25.55;
@@ -120,6 +125,7 @@ public class ElevatorConstants {
         ProcessorHeight = 14.0;
         initialClimbHeight = 20.25;
         L4MiniScoreHeight = 50.0;
+        autonHalfHeight = 25.0;
     }
 
     private static void simBotConstants(){
@@ -133,8 +139,8 @@ public class ElevatorConstants {
         
         PackageHeight = 17.9;
     
-        L4Height = 57.0;
-        L4LongHeight = 53.0;
+        L4Height = 59.0;
+        L4LongHeight = 55.0;
         L3Height = 28.35;
         L2Height = 13.2;
         L1Height = 18.79;

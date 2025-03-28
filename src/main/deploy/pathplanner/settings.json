@@ -12,7 +12,9 @@
     "RedR"
   ],
   "autoFolders": [
-    "Tests"
+    "Blue Autos",
+    "Init Auto",
+    "Red Autos"
   ],
   "defaultMaxVel": 4.96,
   "defaultMaxAccel": 6.0,
