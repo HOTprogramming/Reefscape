@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 16.0155737704918,
+        "y": 5.619364754098362
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 17.0155737704918,
+        "y": 5.619364754098362
+      },
+      "isLocked": false,
+      "linkedName": "GroundPickup3"
+    },
+    {
+      "anchor": {
+        "x": 14.001639344262294,
+        "y": 5.343647540983607
+      },
+      "prevControl": {
+        "x": 14.246089947781647,
+        "y": 5.396029813166326
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.96,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.6,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -29.999999999999996
+  },
+  "reversed": false,
+  "folder": "StatesRedR4Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -50.0
+  },
+  "useDefaultConstraints": true
+}
