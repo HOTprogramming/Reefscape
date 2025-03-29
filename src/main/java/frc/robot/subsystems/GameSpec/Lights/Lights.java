@@ -32,7 +32,8 @@ public class Lights extends SubsystemBase {
         Twinkle,
         TwinkleOff,
         AutoAlign,
-        SetAll
+        SetAll,
+        AutoBarge
     }
     private AnimationTypes m_currentAnimation;
 
@@ -120,6 +121,7 @@ public class Lights extends SubsystemBase {
                 break;
             case AutoAlign:
                 m_toAnimate = new StrobeAnimation(0, 255, 0, 0, 5, LEDS_PER_ANIMATION);
+          
             case SetAll:
                 m_toAnimate = null;
                 break;
@@ -154,8 +156,13 @@ public class Lights extends SubsystemBase {
 
     public Command autoAlignLights() {
       return runOnce(() -> changeAnimation(AnimationTypes.AutoAlign));
-    }
-
+    } 
+    public Command setAutoBargeLights(){
+      return runOnce(()-> {
+      rightCANdle.setLEDs(153, 51, 255);
+      leftCANdle.setLEDs(153, 51, 255);
+    });
+  }
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation

@@ -124,8 +124,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Lights Algae", gamespecManager.setLightsAlgae());
     NamedCommands.registerCommand("Lights Climb", gamespecManager.setLightsClimb());
     NamedCommands.registerCommand("Lights Shoot", gamespecManager.setLightsShoot());
-
-
+    NamedCommands.registerCommand("Lights AutoBarge", gamespecManager.setLightsAutoBarge());
     NamedCommands.registerCommand("Lights Auto Bad", gamespecManager.setLightsBad());
     NamedCommands.registerCommand("Lights Auto Ok", gamespecManager.setLightsOk());
     NamedCommands.registerCommand("Lights Auto Good", gamespecManager.setLightsGood());
@@ -307,38 +306,41 @@ public class RobotContainer {
       operator.y()
       .and(this::isAlgae)
       .and(new Trigger(() -> drivetrain.returnAutoBarge()))
-      .onTrue(NamedCommands.getCommand("barge"));
-
-      operator.a().and(this::isClimb).onTrue(NamedCommands.getCommand("climb"));      
-      operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
-      operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
-      operator.b().and(this::isClimb).onTrue(gamespecManager.latchServo());
-
-      operator.leftTrigger().whileTrue(gamespecManager.floorIntakeDeploy()).onFalse(gamespecManager.floorIntakeClearance());
+      .onTrue(NamedCommands.getCommand("barge")
+      .andThen(gamespecManager.setLightsAutoBarge()));
       
-      operator.povUp().or(operator.povLeft().or(operator.povDown().or(operator.povRight()))).onTrue(NamedCommands.getCommand("Package").unless(this::isClimb));
-
-      operator.axisLessThan(5, -0.05).or(operator.axisGreaterThan(5, 0.05)).and(this::isClimb).whileTrue(
-      Commands.sequence(
-        gamespecManager.climberSubsystem.run(
-        () -> gamespecManager.climberSubsystem.setPower(-operator.getRightY())
-      ).onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
-      ,gamespecManager.climberSubsystem.run(
-        () -> gamespecManager.climberSubsystem.setPower(0.0)
-      ).onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())))
-      .whileFalse(gamespecManager.climberSubsystem.runOnce(
-        () -> gamespecManager.climberSubsystem.setPower(0.0)));
-
-      operator.leftTrigger().or(operator.rightTrigger()).onFalse(NamedCommands.getCommand("Coral Zero"));
-
-       NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
-      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
-
-      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
-
-  }
-
-  public boolean isCoral() {
+            operator.a().and(this::isClimb).onTrue(NamedCommands.getCommand("climb"));      
+            operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
+            operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
+            operator.b().and(this::isClimb).onTrue(gamespecManager.latchServo());
+      
+            operator.leftTrigger().whileTrue(gamespecManager.floorIntakeDeploy()).onFalse(gamespecManager.floorIntakeClearance());
+            
+            operator.povUp().or(operator.povLeft().or(operator.povDown().or(operator.povRight()))).onTrue(NamedCommands.getCommand("Package").unless(this::isClimb));
+      
+            operator.axisLessThan(5, -0.05).or(operator.axisGreaterThan(5, 0.05)).and(this::isClimb).whileTrue(
+            Commands.sequence(
+              gamespecManager.climberSubsystem.run(
+              () -> gamespecManager.climberSubsystem.setPower(-operator.getRightY())
+            ).onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
+            ,gamespecManager.climberSubsystem.run(
+              () -> gamespecManager.climberSubsystem.setPower(0.0)
+            ).onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())))
+            .whileFalse(gamespecManager.climberSubsystem.runOnce(
+              () -> gamespecManager.climberSubsystem.setPower(0.0)));
+      
+            operator.leftTrigger().or(operator.rightTrigger()).onFalse(NamedCommands.getCommand("Coral Zero"));
+      
+             NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
+            NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
+      
+            new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
+      
+        }
+      
+      
+      
+        public boolean isCoral() {
     return mode == Mode.coral;
   }
   public boolean isAlgae() {

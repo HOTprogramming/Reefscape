@@ -534,4 +534,7 @@ public class Manager extends SubsystemBase{
     public Command setOneLights(int light, Boolean good) {
       return lightsSubsystem.setOne(light, good);
     }
-}
+    public Command setLightsAutoBarge(){
+     return lightsSubsystem.setAutoBargeLights();
+      };
+    }
