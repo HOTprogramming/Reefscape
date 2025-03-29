@@ -451,7 +451,7 @@ public class Manager extends SubsystemBase{
         elevatorSubsystem.coast(), 
         intakeSubsystem.coast(), 
         manipulatorSubsystem.coast()
-      );
+      ).ignoringDisable(true);
     }
 
     public Command brakeAll() {
@@ -459,7 +459,7 @@ public class Manager extends SubsystemBase{
         armSubsystem.resetCoast(),
         elevatorSubsystem.resetCoast(),
         intakeSubsystem.resetCoast()
-      );
+      ).ignoringDisable(true);
     }
 
 
