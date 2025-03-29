@@ -445,6 +445,15 @@ public class Manager extends SubsystemBase{
         ,armSubsystem.barge());
     }
 
+    public Command coastAll() {
+      return Commands.parallel(
+        armSubsystem.coast(), 
+        elevatorSubsystem.coast(), 
+        intakeSubsystem.coast(), 
+        manipulatorSubsystem.coast()
+      );
+    }
+
     public Command setLightsCoral() {
       return lightsSubsystem.setYellow();
     }
