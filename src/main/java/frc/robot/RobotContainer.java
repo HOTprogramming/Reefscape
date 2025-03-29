@@ -166,6 +166,9 @@ public class RobotContainer {
       .onTrue(gamespecManager.armSubsystem.coast())
       .onFalse(gamespecManager.armSubsystem.resetCoast()); 
 
+    new Trigger(() -> SmartDashboard.getBoolean("Coast Intake", false))
+      .onTrue(gamespecManager.intakeSubsystem.coast())
+      .onFalse(gamespecManager.intakeSubsystem.resetCoast());
 
     driver.leftTrigger().whileTrue(NamedCommands.getCommand("Chase Object"));
     driver.leftTrigger().whileFalse(drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
