@@ -158,7 +158,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {   
-    new Trigger(() -> SmartDashboard.getBoolean("Coast Switch", false)).onTrue(gamespecManager.coastAll()).onFalse(gamespecManager.brakeAll());
+    new Trigger(() -> SmartDashboard.getBoolean("Coast All", false))
+      .onTrue(gamespecManager.coastAll())
+      .onFalse(gamespecManager.brakeAll());
 
 
     driver.leftTrigger().whileTrue(NamedCommands.getCommand("Chase Object"));
