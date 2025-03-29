@@ -16,10 +16,11 @@ public class Manipulator extends SubsystemBase {
     private final ShuffleboardTab coralShuffleboard;
 
     /* Shuffleboard entries */
-    private GenericEntry wristPosition;
+    private GenericEntry wristCancoderPosition;
     private GenericEntry wristCommandedPos;
     private GenericEntry CANdiPWM1;
     private GenericEntry CANdiPWM3;
+    private GenericEntry wristPosition;
 
     
     public Manipulator(ManipulatorIO io) {
@@ -28,9 +29,10 @@ public class Manipulator extends SubsystemBase {
 
         this.coralShuffleboard = Shuffleboard.getTab("Coral");
 
-        wristPosition = this.coralShuffleboard.add("Coral Position", 0.0).getEntry();
-        wristCommandedPos = this.coralShuffleboard.add("Coral Commanded Position", 0.0).getEntry();
-        CANdiPWM1 = this.coralShuffleboard.add("CANdi Coral Beambreak",false).getEntry();//false when there is no object, true when it detects object
+        wristCancoderPosition = this.coralShuffleboard.add("Wrist Cancoder Position", 0.0).getEntry();
+        wristPosition = this.coralShuffleboard.add("Wrist Position", 0.0).getEntry();
+        wristCommandedPos = this.coralShuffleboard.add("Wrist Commanded Position", 0.0).getEntry();
+        CANdiPWM1 = this.coralShuffleboard.add("CANdi Wrist Beambreak",false).getEntry();//false when there is no object, true when it detects object
         CANdiPWM3 = this.coralShuffleboard.add("Outer BeamBreak",false).getEntry();//false when there is no object, true when it detects object
 
     }
@@ -45,21 +47,23 @@ public class Manipulator extends SubsystemBase {
     }
 
     private void UpdateTelemetry() {
-        wristPosition.setDouble(io.coralWrist.getPosition().getValueAsDouble());
+        wristCancoderPosition.setDouble(io.coralCancoder.getAbsolutePosition().getValueAsDouble());
         CANdiPWM1.setBoolean(stats.candiPWM1);
+        wristPosition.setDouble(io.coralWrist.getPosition().getValueAsDouble());
+
 
         CANdiPWM3.setBoolean(stats.candiPWM3);
     }
 
     private FunctionalCommand coralCommand(double position){
         return new FunctionalCommand(
-            () -> this.wristCommandedPos.setDouble(position),
+            () -> this.wristCommandedPos.setDouble(position/360.0),
             () -> 
             {io.setCoralAngleMotorControl(position);}
             ,
             interrupted -> {io.setCoralAngleMotorControl(position);
             }, 
-            () -> stats.wristCancoderPosition <= position + .01 && stats.wristCancoderPosition >= position - .01,
+            () -> stats.wristCancoderPosition <= (position/360.0) + .01 && stats.wristCancoderPosition >= (position/360.0) - .01,
             this
         );
     }
@@ -97,6 +101,10 @@ public class Manipulator extends SubsystemBase {
 
     public Command L4Spit(){
         return runOnce(() -> io.setCoralSpinMotorControl(-5));
+    }
+
+    public Command L3Spit(){
+        return runOnce(() -> io.setCoralSpinMotorControl(-2));
     }
 
     /** 

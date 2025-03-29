@@ -8,6 +8,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
@@ -20,6 +22,8 @@ public abstract class ClimberIO {
     protected Servo ratchetServo;
     protected TalonFX climber;
     protected TalonFX climber2;
+    protected DigitalInput limitSwitch1;
+    protected DigitalInput limitSwitch2;
 
     public static class ClimberIOStats {
         public double climberPosition = 0.0;
@@ -46,6 +50,8 @@ public abstract class ClimberIO {
                 this.climberServo = new Servo(ClimberConstants.ServoPort);
                 this.climberServo2 = new Servo(ClimberConstants.ServoPort2);
                 this.ratchetServo = new Servo(ClimberConstants.ServoPort3);
+                this.limitSwitch1 = new DigitalInput(7);
+                this.limitSwitch2 = new DigitalInput(8);
                 TalonFXConfiguration cfg = new TalonFXConfiguration();
         
                 FeedbackConfigs fdb = cfg.Feedback;

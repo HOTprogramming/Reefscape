@@ -107,8 +107,8 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean checkRange(double deadband){
-    return (stats.intakePosition >= intakePosition.getDouble(0) - deadband) && 
-           (stats.intakePosition <= intakePosition.getDouble(0) + deadband);
+    return (stats.intakePosition >= intakeCommandedPos.getDouble(0) - deadband) && 
+           (stats.intakePosition <= intakeCommandedPos.getDouble(0) + deadband);
   }
 
   public Command coast() {

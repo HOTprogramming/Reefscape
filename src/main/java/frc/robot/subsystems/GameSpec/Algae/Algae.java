@@ -49,6 +49,10 @@ public class Algae extends SubsystemBase {
         return stats.algaeDistance > AlgaeConstants.algaeTriggerDistance;
     }
 
+    public Boolean returnAlgaeInWhileHolding(){
+        return stats.algaeDistance > AlgaeConstants.algaeHoldDistance;
+    }
+
 
     /**
    * 
