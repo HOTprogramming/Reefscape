@@ -132,11 +132,15 @@ public class Manipulator extends SubsystemBase {
                (stats.wristPosition <= wristCommandedPos.getDouble(0) + deadband);
     }
     
-        public Command stop(){
-          return run(() -> {
-              io.stop();
-          });  
-        }
+    public Command stop(){
+        return run(() -> {
+            io.stop();
+        });  
+    }
+
+    public Command coast() {
+        return runOnce(() -> io.coast());
+    }
 
 
     @Override

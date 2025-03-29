@@ -178,6 +178,14 @@ public class Arm extends SubsystemBase {
     });  
   }
 
+  public Command coast() {
+    return runOnce(() -> io.coast());
+  }
+
+  public Command resetCoast() {
+    return runOnce(() -> io.applyConfig());
+  }
+
   @Override
   public void simulationPeriodic() {
     io.periodic();

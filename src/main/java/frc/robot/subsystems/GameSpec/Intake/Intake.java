@@ -114,6 +114,14 @@ public class Intake extends SubsystemBase {
            (stats.intakePosition <= intakePosition.getDouble(0) + deadband);
   }
 
+  public Command coast() {
+    return runOnce(() -> io.coast());
+  }
+
+  public Command resetCoast() {
+    return runOnce(() -> io.applyConfig());
+  }
+
   @Override
   public void simulationPeriodic() {
   }

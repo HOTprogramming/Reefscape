@@ -190,6 +190,14 @@ public class Elevator extends SubsystemBase {
     });  
   }
 
+  public Command coast() {
+    return runOnce(() -> io.coast());
+  }
+
+  public Command resetCoast() {
+    return runOnce(() -> io.applyConfig());
+  }
+
   public Command hold(){
     return run(() -> {
       io.setElevatorMotorControl(elevatorCommandedPos.getDouble(0));
