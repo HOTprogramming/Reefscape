@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
@@ -98,7 +99,7 @@ public abstract class ArmIO {
         encoderCfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         encoderCfg.MagnetSensor.MagnetOffset = ArmConstants.armEncoderOffset;
 
-        setConfig();
+        applyConfig();
 
         armPosition = arm.getPosition();
         SupplyCurrent = arm.getSupplyCurrent();
@@ -134,7 +135,7 @@ public abstract class ArmIO {
     }
 
 
-    public void setConfig(){
+    public void applyConfig(){
         StatusCode armStatus = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {
             armStatus = arm.getConfigurator().apply(cfg);
@@ -161,6 +162,14 @@ public abstract class ArmIO {
     /** Stop motor */
     public void stop() {
         arm.setVoltage(0);
+    }
+
+    public void coast() {
+        arm.getConfigurator().apply(
+            new TalonFXConfiguration().withMotorOutput(
+                new MotorOutputConfigs().withNeutralMode(
+                    NeutralModeValue.Coast)
+                ));
     }
 
     public void runVolts(double volts){

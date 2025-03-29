@@ -35,7 +35,7 @@ public class ArmIOSim extends ArmIO {
     cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     encoderCfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
-    setConfig();
+    applyConfig();
 
     armSimState = arm.getSimState();
     encoderSimState = armCancoder.getSimState();

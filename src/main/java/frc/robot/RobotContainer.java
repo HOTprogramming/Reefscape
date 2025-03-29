@@ -158,7 +158,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {   
-    
+    new Trigger(() -> false).onTrue(gamespecManager.coastAll());
+
+
     driver.leftTrigger().whileTrue(NamedCommands.getCommand("Chase Object"));
     driver.leftTrigger().whileFalse(drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
 

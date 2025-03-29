@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.PWM1Configs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -115,6 +116,25 @@ public abstract class IntakeIO {
         encoderCfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         encoderCfg.MagnetSensor.MagnetOffset = IntakeConstants.intakeEncoderOffset;
 
+        applyConfig();
+
+        intakePosition = intakeRotation.getPosition();
+
+        intakeCancoderPosition = intakeCancoder.getPosition();
+    
+        BaseStatusSignal.setUpdateFrequencyForAll(
+            50.0,
+            intakePosition,
+            intakeCancoderPosition
+          );
+
+          orangeWheels.optimizeBusUtilization();
+          blackWheels.optimizeBusUtilization();
+          intakeRotation.optimizeBusUtilization();
+          intakeCancoder.optimizeBusUtilization();
+    }
+
+    public void applyConfig() {
         StatusCode intakeStatus = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {
             intakeStatus = intakeRotation.getConfigurator().apply(cfg);
@@ -146,21 +166,6 @@ public abstract class IntakeIO {
         if (!encoderStatus.isOK()) {
             System.out.println("Could not configure device. Error: " + encoderStatus.toString());
         }
-
-        intakePosition = intakeRotation.getPosition();
-
-        intakeCancoderPosition = intakeCancoder.getPosition();
-    
-        BaseStatusSignal.setUpdateFrequencyForAll(
-            50.0,
-            intakePosition,
-            intakeCancoderPosition
-          );
-
-          orangeWheels.optimizeBusUtilization();
-          blackWheels.optimizeBusUtilization();
-          intakeRotation.optimizeBusUtilization();
-          intakeCancoder.optimizeBusUtilization();
     }
 
     /** Update stats */
@@ -184,6 +189,14 @@ public abstract class IntakeIO {
     public void setIntakeSpinMotorControl(double orangeVoltage, double blackVoltage){
         orangeWheels.setVoltage(orangeVoltage);
         blackWheels.setVoltage(blackVoltage);
+    }
+
+    public void coast() {
+        intakeRotation.getConfigurator().apply(
+            new TalonFXConfiguration().withMotorOutput(
+                new MotorOutputConfigs().withNeutralMode(
+                    NeutralModeValue.Coast)
+                ));
     }
 
     /** Perform simulation-specific tasks */

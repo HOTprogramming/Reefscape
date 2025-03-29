@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
@@ -228,6 +229,20 @@ public abstract class ElevatorIO {
     /** Stop motor */
     public void stop() {
         elevator.setVoltage(0);
+    }
+
+    public void coast() {
+        elevator.getConfigurator().apply(
+            new TalonFXConfiguration().withMotorOutput(
+                new MotorOutputConfigs().withNeutralMode(
+                    NeutralModeValue.Coast)
+                ));
+        
+        elevator2.getConfigurator().apply(
+            new TalonFXConfiguration().withMotorOutput(
+                new MotorOutputConfigs().withNeutralMode(
+                    NeutralModeValue.Coast)
+                ));
     }
 
     /** Perform simulation-specific tasks */
