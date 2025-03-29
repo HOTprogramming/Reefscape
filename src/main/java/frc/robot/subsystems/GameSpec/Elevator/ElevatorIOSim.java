@@ -1,9 +1,5 @@
 package frc.robot.subsystems.GameSpec.Elevator;
 
-import javax.sound.midi.SysexMessage;
-
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 

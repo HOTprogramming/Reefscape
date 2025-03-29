@@ -3,28 +3,16 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import static edu.wpi.first.units.Units.derive;
-import static frc.robot.subsystems.Drivetrain.DriveConstants.slowModeMultiplier;
-
 import java.io.IOException;
-import java.util.Map;
-import java.util.jar.Attributes.Name;
 
 import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,9 +24,6 @@ import frc.robot.subsystems.Camera.Camera.CameraPositions;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.GameSpec.Manager;
-import frc.robot.subsystems.GameSpec.Climber.Climber;
-import frc.robot.subsystems.GameSpec.Intake.Intake;
-import frc.robot.subsystems.GameSpec.Lights.Lights;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 

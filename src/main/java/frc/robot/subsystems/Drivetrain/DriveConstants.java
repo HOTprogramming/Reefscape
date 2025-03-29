@@ -19,7 +19,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import frc.robot.Constants;
-import frc.robot.subsystems.Drivetrain.DriveConstants.DriveConfig;
 
 public class DriveConstants {
     public static final double slowModeMultiplier = 0.5;

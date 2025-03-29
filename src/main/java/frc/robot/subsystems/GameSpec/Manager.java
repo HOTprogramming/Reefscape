@@ -1,25 +1,16 @@
 package frc.robot.subsystems.GameSpec;
 
 import java.util.Map;
-import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.Utils;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.GameSpec.Algae.Algae;
 import frc.robot.subsystems.GameSpec.Algae.AlgaeConstants;
-import frc.robot.subsystems.GameSpec.Algae.AlgaeIO;
 import frc.robot.subsystems.GameSpec.Algae.AlgaeIOReal;
 import frc.robot.subsystems.GameSpec.Arm.Arm;
 import frc.robot.subsystems.GameSpec.Arm.ArmConstants;
@@ -33,13 +24,11 @@ import frc.robot.subsystems.GameSpec.Elevator.ElevatorConstants;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOReal;
 import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.GameSpec.Intake.Intake;
-import frc.robot.subsystems.GameSpec.Intake.IntakeConstants;
 import frc.robot.subsystems.GameSpec.Intake.IntakeIOReal;
 import frc.robot.subsystems.GameSpec.Intake.IntakeIOSim;
 import frc.robot.subsystems.GameSpec.Lights.Lights;
 import frc.robot.subsystems.GameSpec.Lights.Lights.AnimationTypes;
 import frc.robot.subsystems.GameSpec.Manipulator.Manipulator;
-import frc.robot.subsystems.GameSpec.Manipulator.ManipulatorConstants;
 import frc.robot.subsystems.GameSpec.Manipulator.ManipulatorIOReal;
 import frc.robot.subsystems.GameSpec.Manipulator.ManipulatorIOSim;
 

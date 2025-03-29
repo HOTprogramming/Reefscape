@@ -1,11 +1,5 @@
 package frc.robot.subsystems.GameSpec.Manipulator;
 import frc.robot.Constants;
-import frc.robot.subsystems.GameSpec.Arm.Arm;
-import frc.robot.subsystems.GameSpec.Arm.ArmIOReal;
-import frc.robot.subsystems.GameSpec.Arm.ArmIOSim;
-import frc.robot.subsystems.GameSpec.Elevator.Elevator;
-import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOReal;
-import frc.robot.subsystems.GameSpec.Elevator.ElevatorIOSim;
 
 public class ManipulatorConstants {
 
