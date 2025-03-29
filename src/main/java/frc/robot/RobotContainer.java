@@ -23,8 +23,10 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -78,13 +80,9 @@ public class RobotContainer {
     }
 
     gamespecManager = new Manager();
-
-    chooser.setDefaultOption("Auto", "Auto");
-    
-    chooser.addOption("RedR4", "RedR4");
-    chooser.addOption("RedL4", "RedL4");
-    chooser.addOption("BlueR4", "BlueR4"); 
-    chooser.addOption("BlueL4", "BlueL4"); 
+   
+    chooser.setDefaultOption("R4", "R4");
+    chooser.addOption("L4", "L4");
     // chooser.addOption("RedL3", "RedL3");
     // chooser.addOption("BlueR3", "BlueR3");
     // chooser.addOption("BlueL3", "BlueL3");
@@ -345,17 +343,21 @@ public class RobotContainer {
     if (autoString != null) {
       if (chooser.getSelected() != autoString) {
         autoString = chooser.getSelected();
-        autoCommand = new PathPlannerAuto(autoString);
-        try {
-          drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
-        } catch (IOException e) {
-          System.err.println("No Auto File");
-        } catch (ParseException e) {
-          System.err.println("idk good luck");
-        } catch (IndexOutOfBoundsException e) {
-          System.err.println("no auto Paths");
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+          autoCommand = new PathPlannerAuto("Blue" + autoString);
+        } else {
+          autoCommand = new PathPlannerAuto("Red" + autoString);
         }
       }
+        // try {
+        //   drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
+        // } catch (IOException e) {
+        //   System.err.println("No Auto File");
+        // } catch (ParseException e) {
+        //   System.err.println("idk good luck");
+        // } catch (IndexOutOfBoundsException e) {
+        //   System.err.println("no auto Paths");
+        // }
     } else {
       autoString = chooser.getSelected();
     }
