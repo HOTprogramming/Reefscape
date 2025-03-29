@@ -166,6 +166,10 @@ public class RobotContainer {
       .onTrue(gamespecManager.armSubsystem.coast())
       .onFalse(gamespecManager.armSubsystem.resetCoast()); 
 
+    new Trigger(() -> SmartDashboard.getBoolean("Coast Elevator", false))
+      .onTrue(gamespecManager.elevatorSubsystem.coast())
+      .onFalse(gamespecManager.elevatorSubsystem.resetCoast());
+
     new Trigger(() -> SmartDashboard.getBoolean("Coast Intake", false))
       .onTrue(gamespecManager.intakeSubsystem.coast())
       .onFalse(gamespecManager.intakeSubsystem.resetCoast());
