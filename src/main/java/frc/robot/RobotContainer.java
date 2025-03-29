@@ -162,6 +162,10 @@ public class RobotContainer {
       .onTrue(gamespecManager.coastAll())
       .onFalse(gamespecManager.brakeAll());
 
+    new Trigger(() -> SmartDashboard.getBoolean("Coast Arm", false))
+      .onTrue(gamespecManager.armSubsystem.coast())
+      .onFalse(gamespecManager.armSubsystem.resetCoast()); 
+
 
     driver.leftTrigger().whileTrue(NamedCommands.getCommand("Chase Object"));
     driver.leftTrigger().whileFalse(drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
