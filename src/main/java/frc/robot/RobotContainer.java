@@ -307,8 +307,8 @@ public class RobotContainer {
       .and(this::isAlgae)
       .and(new Trigger(() -> drivetrain.returnAutoBarge()))
       .onTrue(NamedCommands.getCommand("barge")
-      .andThen(gamespecManager.setLightsAutoBarge()));
-      
+      .alongWith(gamespecManager.setLightsAutoBarge()))
+      .onFalse(NamedCommands.getCommand("refresh lights"));
             operator.a().and(this::isClimb).onTrue(NamedCommands.getCommand("climb"));      
             operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
             operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
