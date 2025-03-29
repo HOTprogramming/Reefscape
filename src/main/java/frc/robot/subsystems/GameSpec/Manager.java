@@ -454,6 +454,15 @@ public class Manager extends SubsystemBase{
       );
     }
 
+    public Command brakeAll() {
+      return Commands.parallel(
+        armSubsystem.resetCoast(),
+        elevatorSubsystem.resetCoast(),
+        intakeSubsystem.resetCoast()
+      );
+    }
+
+
     public Command setLightsCoral() {
       return lightsSubsystem.setYellow();
     }
