@@ -20,6 +20,7 @@ import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -59,9 +60,17 @@ public class RobotContainer {
     climb
   }
 
+  private enum ClimbState {
+    packaged,
+    up,
+    locked,
+    climbed
+  }
+
 
 
   private Mode mode;
+  private ClimbState climbState;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -172,6 +181,7 @@ public class RobotContainer {
     // NamedCommands.registerCommand("Auton Align Right", drivetrain.run(() -> drivetrain.alignReef(1)));
 
     mode = Mode.coral;
+    climbState = ClimbState.packaged;
 
     SmartDashboard.putData(chooser);
 
@@ -280,15 +290,41 @@ public class RobotContainer {
       driver.rightBumper().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
       driver.y().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
       driver.leftBumper().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
-      // driver.b().whileTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), drivetrain.run(() -> drivetrain.alignReefFieldcentric())));      
-      // driver.x().whileTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), drivetrain.run(() -> drivetrain.alignReefFieldcentric())));      
+
     
-      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.RIGHT)).onTrue(gamespecManager.setOneLights(0, true)).onFalse(gamespecManager.setOneLights(0, false).ignoringDisable(true));
-      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.LEFT)).onTrue(gamespecManager.setOneLights(3, true)).onFalse(gamespecManager.setOneLights(3, false).ignoringDisable(true));
-      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.TOP)).onTrue(gamespecManager.setOneLights(5, true)).onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
+      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.RIGHT))
+        .onTrue(gamespecManager.setOneLights(0, true).ignoringDisable(true))
+        .onFalse(gamespecManager.setOneLights(0, false).ignoringDisable(true));
+
+      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.LEFT))
+        .onTrue(gamespecManager.setOneLights(3, true).ignoringDisable(true))
+        .onFalse(gamespecManager.setOneLights(3, false).ignoringDisable(true));
+
+      new Trigger(() -> cameraSubsystem.getCameraAlive(CameraPositions.TOP))
+        .onTrue(gamespecManager.setOneLights(5, true).ignoringDisable(true))
+        .onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
 
 
-      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb).onTrue(gamespecManager.setLightsGood()).onFalse(gamespecManager.setLightsClimb());
+      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb).debounce(.5, DebounceType.kBoth)
+        .onTrue(gamespecManager.setLightsGood())
+        .onFalse(gamespecManager.setLightsClimb());
+
+      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb).and(() -> climbState == ClimbState.up)
+        .onTrue(Commands.sequence(
+          NamedCommands.getCommand("lock fingers"), 
+          Commands.waitSeconds(1.0), 
+          gamespecManager.runOnce(() -> climbState = ClimbState.locked)
+        ));
+
+      new Trigger(() -> climbState == ClimbState.locked).whileTrue(
+        Commands.sequence(
+          gamespecManager.climberSubsystem.run(
+          () -> gamespecManager.climberSubsystem.setPower(-operator.getRightY())
+        ).onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
+        ,gamespecManager.climberSubsystem.run(
+          () -> gamespecManager.climberSubsystem.setPower(0.0)
+        ).onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())
+        ));
       // driver.a().onTrue(gamespecManager.setOneLights(0, true)).onFalse(gamespecManager.setOneLights(0, false).ignoringDisable(true));
       // driver.b().onTrue(gamespecManager.setOneLights(3, true)).onFalse(gamespecManager.setOneLights(3, false).ignoringDisable(true));
       // driver.x().onTrue(gamespecManager.setOneLights(5, true)).onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
@@ -327,7 +363,7 @@ public class RobotContainer {
       .and(new Trigger(() -> drivetrain.returnAutoBarge()))
       .onTrue(NamedCommands.getCommand("barge"));
 
-      operator.a().and(this::isClimb).onTrue(NamedCommands.getCommand("climb"));      
+      operator.a().and(this::isClimb).onTrue(Commands.sequence(NamedCommands.getCommand("climb"), gamespecManager.runOnce(() -> climbState = ClimbState.up)));      
       operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
       operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
       operator.b().and(this::isClimb).onTrue(gamespecManager.latchServo());

@@ -127,8 +127,6 @@ public class Lights extends SubsystemBase {
 
         rightCANdle.animate(m_toAnimate);
         leftCANdle.animate(m_toAnimate);
-
-        System.out.println("Changed to " + m_currentAnimation.toString());
     });
   } 
 
