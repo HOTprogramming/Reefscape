@@ -41,6 +41,7 @@ import frc.robot.subsystems.GameSpec.Algae.AlgaeConstants;
 import frc.robot.subsystems.GameSpec.Climber.Climber;
 import frc.robot.subsystems.GameSpec.Intake.Intake;
 import frc.robot.subsystems.GameSpec.Lights.Lights;
+import frc.robot.subsystems.GameSpec.Lights.Lights.AnimationTypes;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 
@@ -96,11 +97,13 @@ public class RobotContainer {
     chooser.addOption("BlueR4", "BlueR4"); 
     chooser.addOption("BlueL4", "BlueL4"); 
     chooser.addOption("TESTING", "TESTING"); 
-    chooser.addOption("Copy of StatesRedR4", "Copy of StatesRedR4"); 
-    chooser.addOption("Practice1", "Practice1"); 
-    chooser.addOption("Test", "Test"); 
-    chooser.addOption("lolipop", "lolipop"); 
-    chooser.addOption("lolipop test", "lolipop test"); 
+    chooser.addOption("RightBlueLolipop", "RightBlueLolipop"); 
+    chooser.addOption("RightRedLolipopp", "RightRedLolipop"); 
+    chooser.addOption("RedLeftLolipop", "RedLeftLolipop"); 
+    chooser.addOption("BlueLeftLolipop", "BlueLeftLolipop"); 
+
+
+
 
     // chooser.addOption("RedL3", "RedL3");
     // chooser.addOption("BlueR3", "BlueR3");
@@ -135,7 +138,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Lights Coral", gamespecManager.setLightsCoral());
     NamedCommands.registerCommand("Lights Algae", gamespecManager.setLightsAlgae());
     NamedCommands.registerCommand("Lights Climb", gamespecManager.setLightsClimb());
-    NamedCommands.registerCommand("Lights Shoot", gamespecManager.setLightsShoot());
 
 
     NamedCommands.registerCommand("Lights Auto Bad", gamespecManager.setLightsBad());
@@ -282,9 +284,12 @@ public class RobotContainer {
       driver.y().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
       driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
 
-      driver.rightBumper().onFalse(refreshLights());
-      driver.y().onFalse(refreshLights());
-      driver.leftBumper().onFalse(refreshLights());
+      // driver.rightBumper().onFalse(refreshLights());
+      // driver.y().onFalse(refreshLights());
+      // driver.leftBumper().onFalse(refreshLights());
+
+      new Trigger(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.lightsSubsystem.setAutoAlign())
+      .onFalse(Commands.sequence(gamespecManager.lightsSubsystem.stopAnimation(), refreshLights()));
 
       
       driver.rightBumper().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
@@ -363,13 +368,31 @@ public class RobotContainer {
       .and(new Trigger(() -> drivetrain.returnAutoBarge()))
       .onTrue(NamedCommands.getCommand("barge"));
 
-      operator.a().and(this::isClimb).onTrue(Commands.sequence(NamedCommands.getCommand("climb"), gamespecManager.runOnce(() -> climbState = ClimbState.up)));      
+      operator.y()
+        .and(this::isAlgae)
+          .onTrue(gamespecManager.lightsSubsystem.setPurple())
+          .onFalse(refreshLights());
+
+      operator.a().and(this::isClimb).onTrue(Commands.sequence(
+        NamedCommands.getCommand("climb"), 
+        gamespecManager.runOnce(() -> climbState = ClimbState.up)
+        ));
       operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
       operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
-      operator.b().and(this::isClimb).onTrue(gamespecManager.latchServo());
 
-      operator.leftTrigger().or(driver.leftTrigger()).whileTrue(gamespecManager.floorIntakeDeploy()).onFalse(gamespecManager.floorIntakeClearance());
-      
+      //auto climb code
+      // new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb())
+      // .debounce(1.0)
+      // .and(operator.b().and(this::isClimb))
+      // .onTrue(gamespecManager.autoPackageClimber());
+
+      // new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb())
+      // .and(operator.b().and(this::isClimb))
+      // .onTrue(NamedCommands.getCommand("open fingers"));
+
+      operator.leftTrigger().or(driver.leftTrigger()).or(() -> gamespecManager.returnIntakeState())
+      .whileTrue(gamespecManager.floorIntakeDeploy()).onFalse(gamespecManager.floorIntakeClearance());
+
       operator.povUp().or(operator.povLeft().or(operator.povDown().or(operator.povRight()))).onTrue(NamedCommands.getCommand("Package").unless(this::isClimb));
 
       operator.axisLessThan(5, -0.05).or(operator.axisGreaterThan(5, 0.05)).and(this::isClimb).whileTrue(
@@ -427,7 +450,8 @@ public class RobotContainer {
   }
 
   public Command refreshLights() {
-    return gamespecManager.setLightsAlgae().onlyIf(() -> isAlgae())
+    return gamespecManager.lightsSubsystem.stopAnimation()
+    .andThen(gamespecManager.setLightsAlgae().onlyIf(() -> isAlgae()))
     .andThen(gamespecManager.setLightsClimb().onlyIf(() -> isClimb()))
     .andThen(gamespecManager.setLightsCoral().onlyIf(() -> isCoral()));
   }

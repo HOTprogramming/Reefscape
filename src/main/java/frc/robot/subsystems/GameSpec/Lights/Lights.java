@@ -124,9 +124,6 @@ public class Lights extends SubsystemBase {
                 m_toAnimate = null;
                 break;
         }
-
-        rightCANdle.animate(m_toAnimate);
-        leftCANdle.animate(m_toAnimate);
     });
   } 
 
@@ -150,9 +147,9 @@ public class Lights extends SubsystemBase {
       rightCANdle.setLEDs(r, g, b, 0, 8, 10);
     }
 
-    public Command autoAlignLights() {
-      return runOnce(() -> changeAnimation(AnimationTypes.AutoAlign));
-    }
+    // public Command autoAlignLights() {
+    //   return runOnce(() -> changeAnimation(AnimationTypes.AutoAlign));
+    // }
 
     @Override
     public void simulationPeriodic() {
@@ -186,8 +183,29 @@ public class Lights extends SubsystemBase {
 
    public Command setPurple(){
     return runOnce(()-> {
-      rightCANdle.setLEDs(0, 150, 255, 0, RightStart, count);
-      leftCANdle.setLEDs(0, 150, 255, 0, LeftStart, count);
+      rightCANdle.setLEDs(255, 0, 255, 0, RightStart, count);
+      leftCANdle.setLEDs(255, 0, 255, 0, LeftStart, count);
+    });
+   }  
+
+   public Command setAutoAlign(){
+    return runOnce(() -> {
+      rightCANdle.animate(new StrobeAnimation(0, 255, 0, 0, .3, LEDS_PER_ANIMATION, RightStart));
+      leftCANdle.animate(new StrobeAnimation(0, 255, 0, 0, .3, LEDS_PER_ANIMATION, RightStart));
+    });
+   }  
+
+   public Command stopAnimation() {
+    return runOnce(() -> {
+      rightCANdle.animate(null);
+      leftCANdle.animate(null);
+    });
+   }
+
+   public Command setWhite(){
+    return runOnce(()-> {
+      rightCANdle.setLEDs(255, 255, 255, 0, RightStart, count);
+      leftCANdle.setLEDs(255, 255, 255, 0, LeftStart, count);
     });
    }  
 
@@ -201,8 +219,9 @@ public class Lights extends SubsystemBase {
    public Command setOne(int ledNum, boolean good){
     return runOnce(()-> {
       rightCANdle.setLEDs(good ? 0 : 128, good ? 128 : 0, 0, 0, ledNum, 1);
-    
-    });
+      leftCANdle.setLEDs(good ? 0 : 128, good ? 128 : 0, 0, 0, ledNum, 1);
+
+    }).ignoringDisable(true);
    }  
 
    }
