@@ -161,7 +161,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Auton Floor Intake End", gamespecManager.autonFloorIntakeEnd());
     NamedCommands.registerCommand("Stop Drive", drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
 
-    NamedCommands.registerCommand("Chase Object", drivetrain.run(() -> drivetrain.chaseSlow()).until(() -> gamespecManager.intakeSubsystem.getBeamBreak()).onlyIf(() -> drivetrain.targetSeen)); // gamespecManager.intakeSubsystem.getBeamBreak() ||
+    NamedCommands.registerCommand("Chase Object", drivetrain.run(() -> drivetrain.chaseSlow()));
     
     NamedCommands.registerCommand("Chase Auton", drivetrain.run(() -> drivetrain.chaseAuton()).until(() -> gamespecManager.intakeSubsystem.getBeamBreak()).onlyIf(() -> drivetrain.targetSeen)); // gamespecManager.intakeSubsystem.getBeamBreak() ||
    // NamedCommands.registerCommand("Chase Object", drivetrain.run(() -> drivetrain.chaseSlow()).until(() -> (gamespecManager.intakeSubsystem.getBeamBreak()))); // gamespecManager.intakeSubsystem.getBeamBreak() ||
@@ -351,7 +351,10 @@ public class RobotContainer {
       // .and(operator.b().and(this::isClimb))
       // .onTrue(NamedCommands.getCommand("open fingers"));
 
-      operator.leftTrigger().or(driver.leftTrigger()).or(() -> gamespecManager.returnIntakeState())
+      driver.leftTrigger().whileTrue(NamedCommands.getCommand("Chase Object"));
+      driver.leftTrigger().whileFalse(NamedCommands.getCommand("Stop Drive"));
+
+      operator.leftTrigger().or(() -> gamespecManager.returnIntakeState())
       .whileTrue(gamespecManager.floorIntakeDeploy()).onFalse(gamespecManager.floorIntakeClearance());
 
       operator.povUp().or(operator.povLeft().or(operator.povDown().or(operator.povRight()))).onTrue(NamedCommands.getCommand("Package").unless(this::isClimb));
