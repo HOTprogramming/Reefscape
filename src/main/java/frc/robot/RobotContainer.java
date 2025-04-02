@@ -310,26 +310,7 @@ public class RobotContainer {
         .onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
 
 
-      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb).debounce(.5, DebounceType.kBoth)
-        .onTrue(gamespecManager.setLightsGood())
-        .onFalse(gamespecManager.setLightsClimb());
-
-      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb).and(() -> climbState == ClimbState.up)
-        .onTrue(Commands.sequence(
-          NamedCommands.getCommand("lock fingers"), 
-          Commands.waitSeconds(1.0), 
-          gamespecManager.runOnce(() -> climbState = ClimbState.locked)
-        ));
-
-      new Trigger(() -> climbState == ClimbState.locked).whileTrue(
-        Commands.sequence(
-          gamespecManager.climberSubsystem.run(
-          () -> gamespecManager.climberSubsystem.setPower(-operator.getRightY())
-        ).onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
-        ,gamespecManager.climberSubsystem.run(
-          () -> gamespecManager.climberSubsystem.setPower(0.0)
-        ).onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())
-        ));
+     
       // driver.a().onTrue(gamespecManager.setOneLights(0, true)).onFalse(gamespecManager.setOneLights(0, false).ignoringDisable(true));
       // driver.b().onTrue(gamespecManager.setOneLights(3, true)).onFalse(gamespecManager.setOneLights(3, false).ignoringDisable(true));
       // driver.x().onTrue(gamespecManager.setOneLights(5, true)).onFalse(gamespecManager.setOneLights(5, false).ignoringDisable(true));
@@ -379,6 +360,38 @@ public class RobotContainer {
         ));
       operator.y().and(this::isClimb).onTrue(NamedCommands.getCommand("lock fingers"));
       operator.x().and(this::isClimb).onTrue(NamedCommands.getCommand("open fingers"));
+
+      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb).debounce(.5, DebounceType.kBoth)
+      .onTrue(gamespecManager.setLightsGood())
+      .onFalse(gamespecManager.setLightsClimb());
+
+      new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb()).and(this::isClimb)
+        .debounce(1.0, DebounceType.kBoth)
+        .and(() -> climbState == ClimbState.up)
+        .and(operator.b())
+        .onTrue(Commands.sequence(
+          NamedCommands.getCommand("open fingers"), 
+          Commands.waitSeconds(1.0), 
+          gamespecManager.runOnce(() -> climbState = ClimbState.locked)
+        ));
+
+      new Trigger(() -> climbState == ClimbState.locked).and(operator.b()).whileTrue(
+        Commands.sequence(
+          gamespecManager.climberSubsystem.run(
+          () -> gamespecManager.climberSubsystem.setPower(-2.0)
+        ).onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
+        ,gamespecManager.climberSubsystem.run(
+          () -> gamespecManager.climberSubsystem.setPower(0.0)
+        ).onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())
+        ));
+
+      // new Trigger(() -> climbState == ClimbState.locked).and(operator.b()).whileTrue(
+      //   Commands.sequence(
+      //     gamespecManager.lightsSubsystem.setPurple()
+      //   .onlyWhile(() -> gamespecManager.climberSubsystem.checkClimberSoftStop())
+      //   , gamespecManager.lightsSubsystem.setTeal()
+      //   .onlyIf(() -> !gamespecManager.climberSubsystem.checkClimberSoftStop())
+      //   ));
 
       //auto climb code
       // new Trigger(() -> gamespecManager.climberSubsystem.returnReadyToClimb())
