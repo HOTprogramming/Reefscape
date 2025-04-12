@@ -112,11 +112,8 @@ public class Intake extends SubsystemBase {
   }
 
   public Command deployAuton(){
-    return runOnce(() -> {
-      intakeCommandedPos.setDouble(IntakeConstants.intakeGround);
-      io.setIntakeMotorControl(IntakeConstants.intakeGround);
-      io.setIntakeSpinVelocityControl(100.0, 85.0);
-     }); 
+    return intakeCommand(IntakeConstants.intakeGround, 0.0, 0.0);
+
   }
 
 

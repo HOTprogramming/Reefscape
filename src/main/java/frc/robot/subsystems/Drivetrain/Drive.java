@@ -352,8 +352,9 @@ public class Drive extends SubsystemBase {
         return pixelYmax > targetYPixel;
     }
 
-    public Command chaseObject() {
-        return runOnce(() -> {                    pixelTolerance = 10;
+    public Command chaseObject() {  
+        return runOnce(() -> {                
+            pixelTolerance = 10;
             double cameraToCoral = -((pixelX-320) / 320.0) * 35.0 * Math.PI/180.0;
             double distance = 2;
             
@@ -374,7 +375,7 @@ public class Drive extends SubsystemBase {
                 new Pose2d(iOdata.state.Pose.getX(),iOdata.state.Pose.getY(), angleFieldToCoral),            
                 poseFieldToCoral // pos through object  
             );
-            PathConstraints constraints = new PathConstraints(4.96, 10.0, 540.0, 720.0, 12.0);
+            PathConstraints constraints = new PathConstraints(2, 3.0, 540.0, 720.0, 12.0);
             SmartDashboard.putNumberArray("coral Pose no rotation",  new double[] {poseFieldToCoralNoRotation.getX(), poseFieldToCoralNoRotation.getY(), poseFieldToCoralNoRotation.getRotation().getRadians()});
             SmartDashboard.putNumberArray("coral Pose",  new double[] {poseFieldToCoral.getX(), poseFieldToCoral.getY(), poseFieldToCoral.getRotation().getRadians()});
             SmartDashboard.putNumberArray("start Pose",  new double[] {iOdata.state.Pose.getX(), iOdata.state.Pose.getY(), angleFieldToCoral.getRadians()});
@@ -401,6 +402,10 @@ public class Drive extends SubsystemBase {
         });
     }
 
+    public boolean hasFetchTarget() {
+        return targetSeenSub.get();
+    }
+
     public boolean pathend() {
         return iOdata.state.Pose.getTranslation().getDistance(fetchPose.getTranslation()) < 0.1;
     }
@@ -408,7 +413,23 @@ public class Drive extends SubsystemBase {
     public Command chaseObjectCommand() {
         return Commands.sequence(
             chaseObject(),
-            AutoBuilder.followPath(fetchPath));
+            AutoBuilder.followPath(fetchPath).until(() -> pathend()));
+    }
+
+    public Command chaseObjectAuto() {
+        return new FunctionalCommand(
+            () -> {}, 
+            () -> {
+                chaseObject();
+                
+            }, 
+            (interuupted) -> {
+                
+            }, 
+            () -> pathend(), 
+            this);
+
+        
     }
 
     public void chaseSlow() {

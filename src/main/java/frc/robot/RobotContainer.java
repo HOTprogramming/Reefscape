@@ -92,7 +92,8 @@ public class RobotContainer {
     chooser.addOption("RightBlueLolipop", "RightBlueLolipop"); 
     chooser.addOption("RightRedLolipopp", "RightRedLolipop"); 
     chooser.addOption("RedLeftLolipop", "RedLeftLolipop"); 
-    chooser.addOption("BlueLeftLolipop", "BlueLeftLolipop"); 
+    chooser.addOption("BlueLeftLolipop", "BlueLeftLolipop");
+    chooser.addOption("FetchTest", "FetchTest"); 
 
 
 
@@ -157,15 +158,20 @@ public class RobotContainer {
     NamedCommands.registerCommand("Auton Fast Shoot End", gamespecManager.autonShootFinish());
     NamedCommands.registerCommand("Auton Shoot Intake", gamespecManager.autonShootIntake());
 
+    NamedCommands.registerCommand("Floor Intake Down", gamespecManager.autonFloorIntakeDown());
 
     
     NamedCommands.registerCommand("Auton Floor Intake End", gamespecManager.autonFloorIntakeEnd());
     NamedCommands.registerCommand("Stop Drive", drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
+    
+    NamedCommands.registerCommand("2 Meter Until Fetch", drivetrain.chaseObjectCommand().onlyIf(() -> drivetrain.hasFetchTarget())); // gamespecManager.intakeSubsystem.getBeamBreak() ||
 
-    NamedCommands.registerCommand("Chase ", Commands.sequence(drivetrain.chaseObjectCommand())); // gamespecManager.intakeSubsystem.getBeamBreak() ||
+
+    NamedCommands.registerCommand("2 Meter Func Fetch", drivetrain.chaseObjectAuto()); 
+    NamedCommands.registerCommand("2 Meter Fetch", Commands.sequence(drivetrain.chaseObjectCommand().onlyIf(() -> drivetrain.hasFetchTarget()), gamespecManager.lightsSubsystem.setGreen().onlyIf(() -> !drivetrain.hasFetchTarget()))); // gamespecManager.intakeSubsystem.getBeamBreak() ||
     NamedCommands.registerCommand("Chase Object", drivetrain.run(() -> drivetrain.chaseSlow()).until(() -> (gamespecManager.intakeSubsystem.getBeamBreak())).withTimeout(1)); // gamespecManager.intakeSubsystem.getBeamBreak() ||
     
-    NamedCommands.registerCommand("Chase Auton", drivetrain.run(() -> drivetrain.chaseAuton()).until(() -> gamespecManager.intakeSubsystem.getBeamBreak()).onlyIf(() -> drivetrain.targetSeen)); // gamespecManager.intakeSubsystem.getBeamBreak() ||
+    // NamedCommands.registerCommand("Chase Auton", drivetrain.run(() -> drivetrain.chaseAuton()).until(() -> gamespecManager.intakeSubsystem.getBeamBreak()).onlyIf(() -> drivetrain.targetSeen)); // gamespecManager.intakeSubsystem.getBeamBreak() ||
    // NamedCommands.registerCommand("Chase Object", drivetrain.run(() -> drivetrain.chaseSlow()).until(() -> (gamespecManager.intakeSubsystem.getBeamBreak()))); // gamespecManager.intakeSubsystem.getBeamBreak() ||
 
     //new EventTrigger("Package").whileTrue(gamespecManager.goToPackage());
@@ -184,7 +190,7 @@ public class RobotContainer {
 
   private void configureBindings() {   
     
-    driver.leftTrigger().whileTrue(NamedCommands.getCommand("Chase "));
+    driver.leftTrigger().whileTrue(NamedCommands.getCommand("2 Meter Fetch"));
     driver.leftTrigger().whileFalse(drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
 
 

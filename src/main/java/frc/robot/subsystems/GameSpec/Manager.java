@@ -510,6 +510,10 @@ public class Manager extends SubsystemBase{
         ).until(() -> intakeSubsystem.getBeamBreak());
     }
 
+    public Command autonFloorIntakeDown() {
+      return intakeSubsystem.deployAuton();
+    }
+
     /**
      * @apiNote handoff
      */
