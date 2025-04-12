@@ -5,6 +5,8 @@ import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import org.json.simple.parser.ParseException;
@@ -352,8 +354,9 @@ public class Drive extends SubsystemBase {
         return pixelYmax > targetYPixel;
     }
 
-    public Command chaseObject() {  
-        return runOnce(() -> {                
+
+
+    public void chaseObject() {  
             pixelTolerance = 10;
             double cameraToCoral = -((pixelX-320) / 320.0) * 35.0 * Math.PI/180.0;
             double distance = 2;
@@ -391,15 +394,15 @@ public class Drive extends SubsystemBase {
             );
             fetchPath.preventFlipping = true;
 
-            AutoBuilder.followPath(fetchPath).schedule();
 
 
             // Prevent the path from being flipped if the coordinates are already correct
             }
 
+            AutoBuilder.followPath(fetchPath).schedule();
 
             SmartDashboard.putNumber("cameraToCoral", Math.toDegrees(cameraToCoral));
-        });
+            // return AutoBuilder.followPath(fetchPath);
     }
 
     public boolean hasFetchTarget() {
@@ -410,26 +413,28 @@ public class Drive extends SubsystemBase {
         return iOdata.state.Pose.getTranslation().getDistance(fetchPose.getTranslation()) < 0.1;
     }
 
+    public Command followPath(Supplier<PathPlannerPath> path){
+        return AutoBuilder.followPath(path.get()).until(() -> pathend());
+    }
+
     public Command chaseObjectCommand() {
         return Commands.sequence(
-            chaseObject(),
-            AutoBuilder.followPath(fetchPath).until(() -> pathend()));
+            runOnce(()->chaseObject()),
+            followPath(() -> fetchPath));
     }
 
     public Command chaseObjectAuto() {
-        return new FunctionalCommand(
-            () -> {}, 
-            () -> {
-                chaseObject();
+        // return new FunctionalCommand(
+        //     () -> {}, 
+        //     () -> {
+        //         chaseObject();
+        //     }, 
+        //     (interuupted) -> {
                 
-            }, 
-            (interuupted) -> {
-                
-            }, 
-            () -> pathend(), 
-            this);
-
-        
+        //     }, 
+        //     () -> pathend(), 
+        //     this);
+        return Commands.none();//chaseObject().until(() -> (pathend()));
     }
 
     public void chaseSlow() {

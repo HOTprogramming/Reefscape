@@ -151,7 +151,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake Bump", gamespecManager.intakeSubsystem.bump());
     NamedCommands.registerCommand("Half Height", gamespecManager.autonHalfL4());
     NamedCommands.registerCommand("Floor Intake Deploy", gamespecManager.floorIntakeDeploy());
-    NamedCommands.registerCommand("Auton Floor Intake Start", gamespecManager.autonFloorIntakeStart());
+
+
+    Command intakeCommand = gamespecManager.autonFloorIntakeStart();
+
+    NamedCommands.registerCommand("Auton Floor Intake Start", intakeCommand);
     NamedCommands.registerCommand("Auton Floor Intake End Fast", gamespecManager.autonFloorIntakeEndFast());
 
     NamedCommands.registerCommand("Auton Fast Shoot Start", gamespecManager.autonShootStart());
