@@ -104,6 +104,8 @@ public class RobotContainer {
 
 
           chooser.addOption("Blue Backshot", "Blue Backshot"); 
+          chooser.addOption("Red Backshot", "Red Backshot"); 
+
 
 
 
