@@ -96,7 +96,13 @@ public class RobotContainer {
     // chooser.addOption("MiniBackshot", "MiniBackshot"); 
     // chooser.addOption("MiniBackshot-optimized", "MiniBackshot-optimized"); 
 
-          chooser.addOption("Blue Floor Full", "Blue Floor Full"); 
+          chooser.addOption("Blue Right Floor 4", "Blue Right Floor 4"); 
+          chooser.addOption("Blue Left Floor 4", "Blue Left Floor 4"); 
+
+          chooser.addOption("Red Right Floor 4", "Red Right Floor 4"); 
+          chooser.addOption("Red Left Floor 4", "Red Left Floor 4"); 
+
+
           chooser.addOption("Blue Backshot", "Blue Backshot"); 
 
 
