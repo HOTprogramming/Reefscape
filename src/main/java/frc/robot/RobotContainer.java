@@ -84,25 +84,27 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     
-    chooser.addOption("RedR4", "RedR4");
-    chooser.addOption("RedL4", "RedL4");
-    chooser.addOption("BlueR4", "BlueR4"); 
-    chooser.addOption("BlueL4", "BlueL4"); 
+    // chooser.addOption("RedR4", "RedR4");
+    // chooser.addOption("RedL4", "RedL4");
+    // chooser.addOption("BlueR4", "BlueR4"); 
+    // chooser.addOption("BlueL4", "BlueL4"); 
     chooser.addOption("Funky Check", "Funky Check"); 
-    chooser.addOption("RightBlueLolipop", "RightBlueLolipop"); 
-    chooser.addOption("RightRedLolipopp", "RightRedLolipop"); 
-    chooser.addOption("RedLeftLolipop", "RedLeftLolipop"); 
-    chooser.addOption("BlueLeftLolipop", "BlueLeftLolipop"); 
-    chooser.addOption("MiniBackshot", "MiniBackshot"); 
-    chooser.addOption("MiniBackshot-optimized", "MiniBackshot-optimized"); 
-    chooser.addOption("sacrifice", "Backshot-full"); 
+    // chooser.addOption("RightBlueLolipop", "RightBlueLolipop"); 
+    // chooser.addOption("RightRedLolipopp", "RightRedLolipop"); 
+    // chooser.addOption("RedLeftLolipop", "RedLeftLolipop"); 
+    // chooser.addOption("BlueLeftLolipop", "BlueLeftLolipop"); 
+    // chooser.addOption("MiniBackshot", "MiniBackshot"); 
+    // chooser.addOption("MiniBackshot-optimized", "MiniBackshot-optimized"); 
+
+          chooser.addOption("Blue Floor Full", "Blue Floor Full"); 
+          chooser.addOption("Blue Backshot", "Blue Backshot"); 
 
 
-    chooser.addOption("Copy of Regular4", "Copy of Regular4"); 
-    chooser.addOption("Test of Regular4", "TestofRegular4"); 
-    chooser.addOption("BLUE FLOOR TEST", "BLUE FLOOR TEST"); 
-    chooser.addOption("BlueRLoliFetch", "BlueRLoliFetch"); 
-    chooser.addOption("BlueLeftLoliFetch", "BlueLeftLoliFetch"); 
+
+    // chooser.addOption("Copy of Regular4", "Copy of Regular4"); 
+    // chooser.addOption("Test of Regular4", "TestofRegular4"); 
+    // chooser.addOption("BlueRLoliFetch", "BlueRLoliFetch"); 
+    // chooser.addOption("BlueLeftLoliFetch", "BlueLeftLoliFetch"); 
 
 
 

@@ -14,7 +14,9 @@
     "Blue Autos",
     "Dev Autos",
     "Init Auto",
-    "Red Autos"
+    "Old-Autos",
+    "Red Autos",
+    "Worlds Autons"
   ],
   "defaultMaxVel": 4.96,
   "defaultMaxAccel": 6.0,

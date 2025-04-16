@@ -365,6 +365,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Worlds Autons",
   "choreoAuto": false
 }
