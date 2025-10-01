@@ -20,6 +20,7 @@ import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -254,14 +255,28 @@ public class RobotContainer {
       () -> gamespecManager.algaeSubsystem.returnAlgaeInWhileHolding())
       );
 
+      SlewRateLimiter filterX = new SlewRateLimiter(2);
+      SlewRateLimiter filterY = new SlewRateLimiter(2);
+      SlewRateLimiter filterTheta = new SlewRateLimiter(2.5);
+
       drivetrain.setDefaultCommand
       (drivetrain.run(() -> {
         drivetrain.teleopDrive(
-          Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-          Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
+          filterX.calculate(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0),
+          filterY.calculate(Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0),
+          filterTheta.calculate(Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0));
         }
       ));
+
+      // drivetrain.setDefaultCommand
+      // (drivetrain.run(() -> {
+      //   drivetrain.teleopDrive(
+      //     Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+      //     Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+      //     Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
+      //   }
+      // ));
+
       // .onFalse(Commands.race(Commands.waitSeconds(0.15), drivetrain.run(() -> {
       //   drivetrain.teleopDrive(
       //     Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
