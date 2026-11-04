@@ -466,10 +466,10 @@ public class DriveConstants {
 
         
     // Front Left
-    private static final int kFrontLeftDriveMotorIdCompbot = 8;
-    private static final int kFrontLeftSteerMotorIdCompbot = 7;
-    private static final int kFrontLeftEncoderIdCompbot = 41;
-    private static final Angle kFrontLeftEncoderOffsetCompbot = Rotations.of(-0.267822);
+    private static final int kFrontLeftDriveMotorIdCompbot = 4;
+    private static final int kFrontLeftSteerMotorIdCompbot = 3;
+    private static final int kFrontLeftEncoderIdCompbot = 43;
+    private static final Angle kFrontLeftEncoderOffsetCompbot = Rotations.of(-0.422119140625);
     private static final boolean kFrontLeftSteerMotorInvertedCompbot = true;
     private static final boolean kFrontLeftEncoderInvertedCompbot = false;
 
@@ -477,10 +477,10 @@ public class DriveConstants {
     private static final Distance kFrontLeftYPosCompbot = Inches.of(11.5);
 
     // Front Right
-    private static final int kFrontRightDriveMotorIdCompbot = 6;
-    private static final int kFrontRightSteerMotorIdCompbot = 5;
-    private static final int kFrontRightEncoderIdCompbot = 40;
-    private static final Angle kFrontRightEncoderOffsetCompbot = Rotations.of(0.3642578125);
+    private static final int kFrontRightDriveMotorIdCompbot = 8;
+    private static final int kFrontRightSteerMotorIdCompbot = 7;
+    private static final int kFrontRightEncoderIdCompbot = 41;
+    private static final Angle kFrontRightEncoderOffsetCompbot = Rotations.of(0.106201171875);
     private static final boolean kFrontRightSteerMotorInvertedCompbot = true;
     private static final boolean kFrontRightEncoderInvertedCompbot = false;
 
@@ -488,10 +488,10 @@ public class DriveConstants {
     private static final Distance kFrontRightYPosCompbot = Inches.of(-11.5);
 
     // Back Left
-    private static final int kBackLeftDriveMotorIdCompbot = 4;
-    private static final int kBackLeftSteerMotorIdCompbot = 3;
-    private static final int kBackLeftEncoderIdCompbot = 43;
-    private static final Angle kBackLeftEncoderOffsetCompbot = Rotations.of(-0.1357421875);
+    private static final int kBackLeftDriveMotorIdCompbot = 2;
+    private static final int kBackLeftSteerMotorIdCompbot = 1;
+    private static final int kBackLeftEncoderIdCompbot = 42;
+    private static final Angle kBackLeftEncoderOffsetCompbot = Rotations.of(-0.3134765625);
     private static final boolean kBackLeftSteerMotorInvertedCompbot = true;
     private static final boolean kBackLeftEncoderInvertedCompbot = false;
 
@@ -499,10 +499,10 @@ public class DriveConstants {
     private static final Distance kBackLeftYPosCompbot = Inches.of(11.5);
 
     // Back Right
-    private static final int kBackRightDriveMotorIdCompbot = 2;
-    private static final int kBackRightSteerMotorIdCompbot = 1;
-    private static final int kBackRightEncoderIdCompbot = 42;
-    private static final Angle kBackRightEncoderOffsetCompbot = Rotations.of(-0.0908203125);
+    private static final int kBackRightDriveMotorIdCompbot = 6;
+    private static final int kBackRightSteerMotorIdCompbot = 5;
+    private static final int kBackRightEncoderIdCompbot = 40;
+    private static final Angle kBackRightEncoderOffsetCompbot = Rotations.of(0.28271484375);
     private static final boolean kBackRightSteerMotorInvertedCompbot = true;
     private static final boolean kBackRightEncoderInvertedCompbot = false;
 
