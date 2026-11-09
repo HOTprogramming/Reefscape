@@ -324,7 +324,7 @@ public class RobotContainer {
       // driver.leftBumper().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), gamespecManager.setLightsAligning()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)))).onFalse(refreshLights());
 
 
-      // GOOD AUTO ALIGN CODE
+      // GOOD AUTO ALIGN CODE DO NOT DELETE 11/9/26
       // commented because no jetson
       // driver.rightBumper().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(2)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
       // driver.y().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
