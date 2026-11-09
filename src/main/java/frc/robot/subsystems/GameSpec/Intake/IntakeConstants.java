@@ -62,7 +62,7 @@ public class IntakeConstants {
         rollerIntakeVoltage = 10;
         rollerExpelVoltage = 1.5;
         climberOut = -120;
-        vertical = -90;
+        vertical = 90;
         intakeClimb = 6.5;
         
         intakeEncoderOffset = 0.15283203125;

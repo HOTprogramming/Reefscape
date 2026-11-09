@@ -47,7 +47,6 @@ public class Intake extends SubsystemBase {
     io.periodic();
 
     io.updateStats();
-      
     UpdateTelemetry();
   }
 
