@@ -222,8 +222,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {   
-
-    driver.a().onTrue(drivetrain.fetchAuto(2, 1.0)).onFalse(drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
+    // no auto fetch due to no jetson
+    // driver.a().onTrue(drivetrain.fetchAuto(2, 1.0)).onFalse(drivetrain.runOnce(() -> drivetrain.teleopDrive(0, 0, 0)));
 
     // drivetrain.setDefaultCommand
     //   (drivetrain.run(() -> {
@@ -323,13 +323,18 @@ public class RobotContainer {
       // driver.y().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), gamespecManager.setLightsAligning()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)))).onFalse(refreshLights());
       // driver.leftBumper().whileTrue(Commands.sequence(Commands.parallel(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), gamespecManager.setLightsAligning()), drivetrain.resetControllers(), drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)))).onFalse(refreshLights());
 
-      driver.rightBumper().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(2)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
-      driver.y().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
-      driver.leftBumper().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
 
-      driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
-      driver.y().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
-      driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
+      // GOOD AUTO ALIGN CODE
+      // commented because no jetson
+      // driver.rightBumper().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(2)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
+      // driver.y().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(1)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
+      // driver.leftBumper().onTrue(Commands.sequence(drivetrain.runOnce(() -> drivetrain.updateReefTarget(0)), gamespecManager.setLightsAligning(), drivetrain.resetControllers()));
+
+      // driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
+      // driver.y().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
+      // driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.alignReefRobotcentric(false)));
+
+
 
       // driver.rightBumper().onFalse(refreshLights());
       // driver.y().onFalse(refreshLights());
@@ -338,8 +343,7 @@ public class RobotContainer {
       new Trigger(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.lightsSubsystem.setAutoAlign())
       .onFalse(Commands.sequence(gamespecManager.lightsSubsystem.stopAnimation(), refreshLights()));
 
-      // GOOD AUTO ALIGN CODE
-      // commented because no jetson
+
       driver.rightBumper().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
       driver.y().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
       driver.leftBumper().and(() -> drivetrain.getAutoAlignGood()).onTrue(gamespecManager.setLightsAlignGood());
